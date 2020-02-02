@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://localhost:8080/Userstore" xmlns:u="http://localhost:8080/Userstore">
+
+    <xs:element name="userstore">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="u:user" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="UsernameUnique">
+            <xs:selector xpath="u:user/u:username"/>
+            <xs:field xpath="."/>
+        </xs:unique>
+        <xs:unique name="EmailUnique">
+            <xs:selector xpath="u:user/u:email"/>
+            <xs:field xpath="."/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:element name="user">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="username">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string"/>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="password"/>
+                <xs:element name="fullName"/>
+                <xs:element name="email">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string"/>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="role">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="ROLE_AUTHOR"/>
+                            <xs:enumeration value="ROLE_REVIEWER"/>
+                            <xs:enumeration value="ROLE_EDITOR"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
