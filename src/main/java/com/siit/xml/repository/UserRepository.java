@@ -1,5 +1,6 @@
 package com.siit.xml.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +36,27 @@ public class UserRepository {
 	
 	public List<User> getAll() {
 		try {
-			return db.getByXPath(new User(), "//user/*/..");			
+			return db.getByXPath(new User(), "//user");			
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
+	public List<String> getReviewerUsernames() {
+		try {
+			List<User> users = db.getByXPath(new User(), "//user[role=\"ROLE_EDITOR\" or role=\"ROLE_REVIEWER\"]");
+			ArrayList<String> usernames = new ArrayList<String>();
+			for (User user : users) {
+				usernames.add(user.getUsername().toString());
+			}
+			return usernames;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public User findByUsername(String username) {
 		try {
 			return db.getResourceById(new User(), username);

@@ -87,6 +87,14 @@ public class UserController {
     	return new ResponseEntity<List<User>>(userService.getAllUsers(),HttpStatus.OK);
     }
     
+	@PreAuthorize("hasAuthority('ROLE_EDITOR')")
+    @RequestMapping(
+    		value = "/allReviewers",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getAllReveiwers() {
+    	return new ResponseEntity<List<String>>(userService.getAllReviewers(),HttpStatus.OK);
+    }
     
 	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
     @RequestMapping(

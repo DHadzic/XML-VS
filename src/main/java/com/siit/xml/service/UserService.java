@@ -41,4 +41,8 @@ public class UserService {
 		return userRep.getAll();
 	}
 
+	public List<String> getAllReviewers(){
+		return userRep.getReviewerUsernames();
+	}
+
 }

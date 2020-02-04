@@ -2,6 +2,7 @@ package com.siit.xml.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,9 @@ public class MyGenericDatabase {
 		}};
 	public static final Map<String,String> schemaPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","data/schemas/User.xsd");
+		}};
+	public static final Map<String,String> namespaceMap = new HashMap<String,String>() {{
+		put("com.siit.xml.modelUser.User","http://localhost:8080/User");
 		}};
     
     public <T> void saveResourse(T writeValue, String entityId) throws Exception {
@@ -93,6 +97,7 @@ public class MyGenericDatabase {
     	String givenClass = getClassName(searchEntity);
     	String collectionId = collectionIdMap.get(givenClass);
     	String modelPath = jaxbPathMap.get(givenClass);
+    	String namespace = namespaceMap.get(givenClass);
     	ConnectUtil con= new ConnectUtil();
     	
     	Database db = con.connectToDatabase(AuthenticationUtilities.loadProperties());
@@ -101,8 +106,10 @@ public class MyGenericDatabase {
     	Collection col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
     	XPathQueryService xpathService = (XPathQueryService) col.getService("XPathQueryService","1.0");
     	xpathService.setProperty("indent", "yes");
+        xpathService.setNamespace("", namespace);
     	
     	ResourceSet result = xpathService.query(xpath);
+    	System.out.println(result.getSize());
     	ResourceIterator i = result.getIterator();
     	Resource next = null;
     	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
@@ -122,6 +129,18 @@ public class MyGenericDatabase {
     	}
     	
     	return retValue;
+    }
+    
+    public <T> T getClassFromXML(T myObject, String xml) {
+    	String className = getClassName(myObject);
+    	String modelPath = jaxbPathMap.get(className);
+    	try {
+	    	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
+	    	return (T) unmarshaller.unmarshal(new StringReader(xml));
+    	} catch( Exception e) {
+    		e.printStackTrace();
+    		return null;
+    	}
     }
     
     public <T> String getClassName(T myObject) {
