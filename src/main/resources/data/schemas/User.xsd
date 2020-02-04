@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://localhost:8080/User" xmlns:u="http://localhost:8080/User">
+
+    <xs:element name="user">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="username"/>
+                <xs:element name="password"/>
+                <xs:element name="fullName"/>
+                <xs:element name="email"/>
+                <xs:element name="role">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="ROLE_AUTHOR"/>
+                            <xs:enumeration value="ROLE_REVIEWER"/>
+                            <xs:enumeration value="ROLE_EDITOR"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
