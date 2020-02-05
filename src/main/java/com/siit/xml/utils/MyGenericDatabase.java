@@ -174,8 +174,7 @@ public class MyGenericDatabase {
     		return enclosingClass.getName();
     	} else {
     		return myObject.getClass().getName();
-    	}
-    	
+    	}    	
     }
     
     
