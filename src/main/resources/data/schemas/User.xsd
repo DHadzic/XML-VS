@@ -5,10 +5,10 @@
     <xs:element name="user">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="username"/>
-                <xs:element name="password"/>
-                <xs:element name="fullName"/>
-                <xs:element name="email"/>
+                <xs:element name="username" type="xs:string"/>
+                <xs:element name="password" type="xs:string"/>
+                <xs:element name="fullName" type="xs:string"/>
+                <xs:element name="email" type="xs:string"/>
                 <xs:element name="role">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">

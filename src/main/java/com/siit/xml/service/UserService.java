@@ -29,12 +29,8 @@ public class UserService {
 		user.setFullName(userDTO.getFullname());
 		user.setEmail(userDTO.getEmail());
 		user.setRole(userDTO.getRole());
-		
-		if(userRep.saveUser(user)) {
-			return "Succesful";
-		}else {
-			return "User with given name already exists";
-		}
+				
+		return userRep.saveUser(user);
 	}
 	
 	public List<User> getAllUsers(){

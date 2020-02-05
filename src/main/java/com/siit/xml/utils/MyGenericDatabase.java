@@ -1,6 +1,7 @@
 package com.siit.xml.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -8,14 +9,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.util.JAXBSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.exist.xmldb.EXistResource;
 import org.springframework.stereotype.Component;
+import org.xml.sax.ErrorHandler;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -90,7 +97,11 @@ public class MyGenericDatabase {
     	ConnectUtil con = new ConnectUtil();
     	DatabaseTouple dbt = con.getReourceById(collectionId,entityId,AuthenticationUtilities.loadProperties());
     	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
-    	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(dbt.getResource().getContentAsDOM()));
+    	try {
+        	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(dbt.getResource().getContentAsDOM()));
+    	}catch ( NullPointerException e) {
+    		return null;
+    	}
     }
     
     public <T> List<T> getByXPath(T searchEntity,String xpath) throws Exception {
@@ -136,13 +147,27 @@ public class MyGenericDatabase {
     	String modelPath = jaxbPathMap.get(className);
     	try {
 	    	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
-	    	return (T) unmarshaller.unmarshal(new StringReader(xml));
+	    	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(new StringReader(xml)));
     	} catch( Exception e) {
-    		e.printStackTrace();
+    		System.out.println("getClassFromXML String - EXCEPTION");
+    		//e.printStackTrace();
     		return null;
     	}
     }
     
+    public <T> T getClassFromXML(T myObject, File xml) {
+    	String className = getClassName(myObject);
+    	String modelPath = jaxbPathMap.get(className);
+    	try {
+	    	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
+	    	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(xml));
+    	} catch( Exception e) {
+    		System.out.println("getClassFromXML file - EXCEPTION");
+    		//e.printStackTrace();
+    		return null;
+    	}
+    }
+
     public <T> String getClassName(T myObject) {
     	Class<?> enclosingClass = myObject.getClass().getEnclosingClass();
     	if (enclosingClass != null) {
@@ -166,6 +191,27 @@ public class MyGenericDatabase {
     	JAXBContext context = JAXBContext.newInstance(modelPath);
     	Unmarshaller unmarshaller = context.createUnmarshaller();
     	return unmarshaller;
+    }
+    
+    public <T> boolean validateClassAgainstSchema(T myObject) {
+    	String className = getClassName(myObject);
+    	String modelPath = jaxbPathMap.get(className);
+    	String schemaPath = "src/main/resources/" + schemaPathMap.get(className);
+    	try {
+	    	JAXBContext jc = JAXBContext.newInstance(modelPath);
+	        JAXBSource source = new JAXBSource(jc, myObject);
+	
+	        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI); 
+	        Schema schema = sf.newSchema(new File(schemaPath)); 
+	
+	        Validator validator = schema.newValidator();
+	        validator.setErrorHandler(null);
+	        validator.validate(source);
+	        return true;
+    	} catch ( Exception e) {
+    		e.printStackTrace();
+    		return false;
+    	}
     }
 
 }

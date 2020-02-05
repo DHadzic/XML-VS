@@ -15,23 +15,32 @@ public class UserRepository {
 	@Autowired
 	MyGenericDatabase db;
 	
-	public boolean saveUser(User user) {
+	public String saveUser(User user) {
 		try {
-			if(db.getResourceById(new User(), user.getUsername().toString()) != null) {
-				return false;
+			if(db.getResourceById(user,user.getUsername()) != null) {
+				return "Username taken";
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			return false;
+			return "Something went wrong";
 		}
 		
 		try {
-			db.saveResourse(user, user.getUsername().toString());
+			/*
+			try {
+				boolean answer = true;
+				if(!(answer = db.validateClassAgainstSchema(user))) {
+					System.out.println(answer);
+					return "Bad input format";
+				}
+			} catch( Exception e) { return "Bad input format"; }
+			*/
+			db.saveResourse(user, user.getUsername());
 		}catch ( Exception e){
-			e.printStackTrace();
-			return false;
+			//e.printStackTrace();
+			return "User was not stored";
 		}
-		return true;
+		return "Succesful";
 	}
 	
 	public List<User> getAll() {
@@ -48,7 +57,7 @@ public class UserRepository {
 			List<User> users = db.getByXPath(new User(), "//user[role=\"ROLE_EDITOR\" or role=\"ROLE_REVIEWER\"]");
 			ArrayList<String> usernames = new ArrayList<String>();
 			for (User user : users) {
-				usernames.add(user.getUsername().toString());
+				usernames.add(user.getUsername());
 			}
 			return usernames;
 		} catch ( Exception e ) {
@@ -61,7 +70,8 @@ public class UserRepository {
 		try {
 			return db.getResourceById(new User(), username);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Finding user EXCEPTION");
 			return null;
 		}
 	}
