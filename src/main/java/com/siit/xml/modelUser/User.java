@@ -14,6 +14,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.siit.xml.utils.rdf.RDFLiteral;
+import com.siit.xml.utils.rdf.RDFProperty;
+import com.siit.xml.utils.rdf.RDFSerializable;
+import com.siit.xml.utils.rdf.RDFUri;
+
 
 /**
  * <p>Java class for anonymous complex type.
@@ -55,18 +60,25 @@ import javax.xml.bind.annotation.XmlType;
     "role"
 })
 @XmlRootElement(name = "user")
+@RDFSerializable(uri = "user/")
 public class User {
 
     @XmlElement(required = true)
+    @RDFUri()
     protected String username;
     @XmlElement(required = true)
     protected String password;
     @XmlElement(required = true)
+    @RDFLiteral()
     protected String fullName;
     @XmlElement(required = true)
+    @RDFLiteral()
     protected String email;
     @XmlElement(required = true)
     protected String role;
+    
+    @RDFProperty()
+    protected User user;
 
     /**
      * Gets the value of the username property.
@@ -187,5 +199,10 @@ public class User {
     public void setRole(String value) {
         this.role = value;
     }
+
+	public void setUser(User user2) {
+		this.user = user2;
+		
+	}
 
 }
