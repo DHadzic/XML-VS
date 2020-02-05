@@ -95,7 +95,12 @@ public class MyGenericDatabase {
     	String collectionId = collectionIdMap.get(givenClass);
     	String modelPath = jaxbPathMap.get(givenClass);
     	ConnectUtil con = new ConnectUtil();
-    	DatabaseTouple dbt = con.getReourceById(collectionId,entityId,AuthenticationUtilities.loadProperties());
+    	DatabaseTouple dbt;
+    	try {
+    		dbt = con.getReourceById(collectionId,entityId,AuthenticationUtilities.loadProperties());		
+    	} catch ( NullPointerException e) {
+    		return null;
+    	}
     	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
     	try {
         	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(dbt.getResource().getContentAsDOM()));
@@ -208,7 +213,7 @@ public class MyGenericDatabase {
 	        validator.validate(source);
 	        return true;
     	} catch ( Exception e) {
-    		e.printStackTrace();
+    		//e.printStackTrace();
     		return false;
     	}
     }

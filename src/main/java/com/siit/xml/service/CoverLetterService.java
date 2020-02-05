@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.repository.CoverLetterRepository;
 
 @Service
@@ -34,6 +35,10 @@ public class CoverLetterService {
 			return "Bad input file";
 		}
 		return clRep.saveXML(f);
+	}
+	
+	public File getFile(FileGenDTO data) {
+		return clRep.getFile(data);
 	}
 
 }
