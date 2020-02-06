@@ -38,7 +38,9 @@ public class UserService {
 	}
 
 	public List<String> getAllReviewers(){
-		return userRep.getReviewerUsernames();
+		userRep.updateUser("UserE");
+		return null;
+		//return userRep.getReviewerUsernames();
 	}
 
 }

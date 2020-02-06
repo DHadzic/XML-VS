@@ -46,6 +46,14 @@ public class UserRepository {
 			return null;
 		}
 	}
+	
+	public void removeUser(String username) {
+		db.deleteResource(new User(), username);
+	}
+	
+	public void updateUser(String username) {
+		db.updateResource(new User(), username, "/user/email", "NOVI EMAIL");
+	}
 
 	public List<String> getReviewerUsernames() {
 		try {

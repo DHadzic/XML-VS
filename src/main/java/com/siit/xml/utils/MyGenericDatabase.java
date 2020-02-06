@@ -196,20 +196,34 @@ public class MyGenericDatabase {
     	String givenClass = getClassName(entity);
     	String collectionId = collectionIdMap.get(givenClass);
     	ConnectUtil con= new ConnectUtil();
+    	Collection col = null;
     	
     	try {
 	    	Database db = con.connectToDatabase(AuthenticationUtilities.loadProperties());
 	    	DatabaseManager.registerDatabase(db);
 	    	
-	    	Collection col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
-	    	XUpdateQueryService xpathService = (XUpdateQueryService) col.getService("XUpdateQueryService","1.0");
+	    	col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
+            col.setProperty("indent", "yes");
+	    	XUpdateQueryService xupdateService = (XUpdateQueryService) col.getService("XUpdateQueryService","1.0");
+            xupdateService.setProperty("indent", "yes");
 
-    		xpathService.updateResource(id,String.format(XUpdateTemplate.UPDATE, aimXPath, newValue));
+            Long num = xupdateService.updateResource(id,String.format(XUpdateTemplate.UPDATE, aimXPath, newValue));
+            System.out.println(num);
 
-    	}catch( Exception e) {
+    	} catch( Exception e) {
     		e.printStackTrace();
     		return false;
-    	}
+    	} finally {
+        	
+            // don't forget to cleanup
+            if(col != null) {
+                try { 
+                	col.close();
+                } catch (XMLDBException xe) {
+                	xe.printStackTrace();
+                }
+            }
+        }
     	
     	return true;
     }
