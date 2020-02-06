@@ -8,6 +8,8 @@
 
 package com.siit.xml.modelUser;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -17,7 +19,8 @@ import javax.xml.bind.annotation.XmlType;
 import com.siit.xml.utils.rdf.RDFLiteral;
 import com.siit.xml.utils.rdf.RDFProperty;
 import com.siit.xml.utils.rdf.RDFSerializable;
-import com.siit.xml.utils.rdf.RDFUri;
+import com.siit.xml.utils.rdf.RDFID;
+import com.siit.xml.utils.rdf.RDFListProperty;
 
 
 /**
@@ -60,11 +63,11 @@ import com.siit.xml.utils.rdf.RDFUri;
     "role"
 })
 @XmlRootElement(name = "user")
-@RDFSerializable(uri = "user/")
+@RDFSerializable(uri = "user")
 public class User {
 
     @XmlElement(required = true)
-    @RDFUri()
+    @RDFID()
     protected String username;
     @XmlElement(required = true)
     protected String password;
@@ -77,8 +80,8 @@ public class User {
     @XmlElement(required = true)
     protected String role;
     
-    @RDFProperty()
-    protected User user;
+    @RDFListProperty(Predicate = "friend", ValueType = User.class)
+    public List<User> users;
 
     /**
      * Gets the value of the username property.
@@ -199,10 +202,5 @@ public class User {
     public void setRole(String value) {
         this.role = value;
     }
-
-	public void setUser(User user2) {
-		this.user = user2;
-		
-	}
 
 }
