@@ -36,7 +36,15 @@
     </xs:complexType>
     <xs:complexType name="TBasicInformation">
         <xs:sequence>
-            <xs:element maxOccurs="1" name="title" type="xs:string"/>
+            <xs:element maxOccurs="1" name="title" form="qualified">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="property" type="xs:string"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
             <xs:element maxOccurs="unbounded" name="authors" type="TAuthor"/>
             <xs:element name="reviewers" type="t:TReviewer"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="keywords" type="xs:string"/>

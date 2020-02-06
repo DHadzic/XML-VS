@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.repository.PublicationRepository;
 
 @Service
@@ -19,6 +20,7 @@ public class PublicationService {
 	public String saveXML(String xmlData) {
 		return publicationRep.saveXML(xmlData);
 	}
+	
 	
 	public String saveXML(MultipartFile xmlFile) {
 		File f= null;
@@ -33,5 +35,8 @@ public class PublicationService {
 			return "Bad input file";
 		}
 		return publicationRep.saveXML(f);
+	}
+	public TPublication getById(String id ){
+		return publicationRep.getPublicationById(id);
 	}
 }

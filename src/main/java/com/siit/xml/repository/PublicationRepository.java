@@ -19,9 +19,9 @@ public class PublicationRepository {
 		TPublication publication = db.getClassFromXML(new TPublication(), xmlData);
 		
 		try {
-			System.out.println("usao");
 			db.saveResourse(publication, publication.getPublicationId());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "Bad input data";
 		}
 		return "Succesful";
@@ -39,5 +39,14 @@ public class PublicationRepository {
 		}
 		
 		return "Succesful";
+	}
+	public TPublication getPublicationById(String id){
+		try{
+			TPublication publication = db.getResourceById(new TPublication(), id);
+			return publication;
+		}catch(Exception e){
+			System.out.println("Greska");
+			return null;
+		}
 	}
 }

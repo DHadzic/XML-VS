@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,5 +36,17 @@ public class PublicationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity saveXML(@RequestParam("file") MultipartFile xmlFile) {
 		return new ResponseEntity<String>(pService.saveXML(xmlFile),HttpStatus.OK);
+    }
+	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
+	@RequestMapping(
+			value = "/enitity/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity findById(@PathVariable String id) {
+		try{
+			return new ResponseEntity<>(pService.getById(id), HttpStatus.OK);
+		}catch(Exception e){
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
     }
 }

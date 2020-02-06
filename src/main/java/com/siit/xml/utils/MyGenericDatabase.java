@@ -22,7 +22,6 @@ import javax.xml.validation.Validator;
 
 import org.exist.xmldb.EXistResource;
 import org.springframework.stereotype.Component;
-import org.xml.sax.ErrorHandler;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -32,13 +31,16 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
+import org.xmldb.api.modules.XUpdateQueryService;
+
+import com.siit.xml.utils.AuthenticationUtilities.ConnectionProperties;
 
 @Component
 public class MyGenericDatabase {
 
 	public static final Map<String,String> collectionIdMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","/db/paper_publish/user");
-		put("com.siit.xml.model.publication.TPublication", "/db/paper_publicsh/publication");
+		put("com.siit.xml.model.publication.TPublication", "/db/paper_publish/publication");
 		}};
 	public static final Map<String,String> jaxbPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","com.siit.xml.modelUser");
@@ -111,6 +113,7 @@ public class MyGenericDatabase {
     	}
     }
     
+    
     public <T> List<T> getByXPath(T searchEntity,String xpath) throws Exception {
     	String givenClass = getClassName(searchEntity);
     	String collectionId = collectionIdMap.get(givenClass);
@@ -149,18 +152,6 @@ public class MyGenericDatabase {
     	return retValue;
     }
     
-    public <T> T getClassFromXML(T myObject, String xml) {
-    	String className = getClassName(myObject);
-    	String modelPath = jaxbPathMap.get(className);
-    	try {
-	    	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
-	    	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(new StringReader(xml)));
-    	} catch( Exception e) {
-    		System.out.println("getClassFromXML String - EXCEPTION");
-    		//e.printStackTrace();
-    		return null;
-    	}
-    }
     
     public <T> T getClassFromXML(T myObject, File xml) {
     	String className = getClassName(myObject);
