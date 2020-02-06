@@ -1,8 +1,7 @@
+
 package com.siit.xml.dtos;
 
 import java.util.List;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 
 public class CoverLetterDTO {
 	private String content;

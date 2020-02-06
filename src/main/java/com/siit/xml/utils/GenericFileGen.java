@@ -23,6 +23,7 @@ public class GenericFileGen {
 		put("com.siit.xml.modelCoverLetter.CoverLetter","src/main/resources/data/xsl/CoverLetter.xsl");
 		put("com.siit.xml.modelReview.Review","src/main/resources/data/xsl/Review.xsl");
 		put("com.siit.xml.modelReviews.Reviews","src/main/resources/data/xsl/Reviews.xsl");
+		put("com.siit.xml.model.publication.TPublication", "src/main/resources/data/xsl/Publication.xsl");
 	}};
 	
 	

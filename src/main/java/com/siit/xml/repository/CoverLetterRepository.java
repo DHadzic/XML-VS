@@ -9,6 +9,9 @@ import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.dtos.FileType;
 import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.modelCoverLetter.CoverLetter;
+
+import com.siit.xml.modelUser.User;
+
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
 import com.siit.xml.utils.PDFTransformer;
@@ -138,6 +141,8 @@ public class CoverLetterRepository {
 				return false;
 			}
 			coverLetter.setPaperTitle(pub.getBasicInformations().getTitle().getValue());
+
+
 		} catch (Exception e) {
 			return false;
 			//e.printStackTrace();

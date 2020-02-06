@@ -1,2 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:reviews xmlns="http://localhost:8080/Review" xmlns:ns2="http://localhost:8080/Reviews" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="C:\Users\Damir\Desktop\xml_naucniradovi\xml\target\classes\data\schemas\Reviews.xsd"/>
+<SciencePaper xmlns="http://foo.bar" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" publicationId="1" xsi:schemaLocation="D:\5.godina-Master\xml projekat\XML-VS\target\classes\data\schemas\Publication.xsd">
+    <basicInformations>
+        <title>title0</title>
+        <authors>
+            <authorUsername>authorUsername0</authorUsername>
+            <authorInstitution>authorInstitution0</authorInstitution>
+        </authors>
+        <authors>
+            <authorUsername>authorUsername1</authorUsername>
+            <authorInstitution>authorInstitution1</authorInstitution>
+        </authors>
+        <keywords>science</keywords>
+        <keywords>math</keywords>
+        <keywords>biology</keywords>
+    </basicInformations>
+    <paragraph>
+        <paragraphTitle>paragraphTitle0</paragraphTitle>
+        <element>
+            <citation id="0">
+                <authorName>authorName0</authorName>
+                <authorName>authorName1</authorName>
+                <year>50</year>
+                <text>text0</text>
+            </citation>
+        </element>
+        <element>
+            <citation id="1">
+                <authorName>authorName2</authorName>
+                <authorName>authorName3</authorName>
+                <year>50</year>
+                <text>text1</text>
+            </citation>
+        </element>
+    </paragraph>
+    <paragraph>
+        <paragraphTitle>paragraphTitle1</paragraphTitle>
+        <element>
+            <citation id="3">
+                <authorName>authorName4</authorName>
+                <authorName>authorName5</authorName>
+                <year>50</year>
+                <text>text2</text>
+            </citation>
+        </element>
+        <element>
+            <text>text3</text>
+        </element>
+    </paragraph>
+    <reference citationId="0">
+        <authorName>authorName6</authorName>
+        <paperTitle>paperTitle0</paperTitle>
+        <year>50</year>
+    </reference>
+    <reference citationId="1">
+        <authorName>authorName7</authorName>
+        <paperTitle>paperTitle1</paperTitle>
+        <year>50</year>
+    </reference>
+</SciencePaper>

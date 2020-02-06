@@ -23,6 +23,8 @@ import org.exist.xmldb.EXistResource;
 import org.springframework.stereotype.Component;
 import org.xml.sax.helpers.DefaultHandler;
 
+
+
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -34,7 +36,9 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 
+import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.utils.AuthenticationUtilities.ConnectionProperties;
+
 
 
 @Component
@@ -47,6 +51,7 @@ public class MyGenericDatabase {
 		put("com.siit.xml.modelReview.Review","/db/paper_publish/review");
 		put("com.siit.xml.modelReviews.Reviews","/db/paper_publish/reviews");
 		}};
+
 		public static final Map<String,String> jaxbPathMap = new HashMap<String,String>() {{
 			put("com.siit.xml.modelUser.User","com.siit.xml.modelUser");
 			put("com.siit.xml.modelCoverLetter.CoverLetter","com.siit.xml.modelCoverLetter");
@@ -67,7 +72,7 @@ public class MyGenericDatabase {
 		put("com.siit.xml.modelCoverLetter.CoverLetter","/db/paper_publish/coverLetter");
 		put("com.siit.xml.modelReview.Review","/db/paper_publish/review");
 		put("com.siit.xml.modelReviews.Reviews","/db/paper_publish/reviews");
-		}};
+	}};
 
     
     public <T> void saveResourse(T writeValue, String entityId) throws Exception {
@@ -220,7 +225,7 @@ public class MyGenericDatabase {
             col.setProperty("indent", "yes");
 	    	XUpdateQueryService xupdateService = (XUpdateQueryService) col.getService("XUpdateQueryService","1.0");
             xupdateService.setProperty("indent", "yes");
-
+            XUpdateTemplate.TARGET_NAMESPACE = namespaceMap.get(givenClass);
             Long num = xupdateService.updateResource(id,String.format(XUpdateTemplate.UPDATE, aimXPath, newValue));
             System.out.println(num);
 
@@ -238,10 +243,8 @@ public class MyGenericDatabase {
                 }
             }
         }
-    	
     	return true;
     }
-    
     public <T> T getClassFromXML(T myObject, String xml) {
     	String className = getClassName(myObject);
     	String modelPath = jaxbPathMap.get(className);
@@ -294,7 +297,12 @@ public class MyGenericDatabase {
     public <T> boolean validateClassAgainstSchema(T myObject) {
     	String className = getClassName(myObject);
     	String modelPath = jaxbPathMap.get(className);
+    	System.out.println("modelPath " + modelPath);
+    	System.out.println("className " + className);
+
     	String schemaPath = "src/main/resources/" + schemaPathMap.get(className);
+    	System.out.println("shcemaPath " +schemaPath);
+
     	try {
     		JAXBContext jc = JAXBContext.newInstance(modelPath);
 	        JAXBSource source = new JAXBSource(jc, myObject);
@@ -310,7 +318,7 @@ public class MyGenericDatabase {
 	        //validator.validate(source);
 	        return true;
     	} catch ( Exception e) {
-    		//e.printStackTrace();
+    		e.printStackTrace();
     		return false;
     	}
     }
