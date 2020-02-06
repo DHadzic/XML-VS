@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.siit.xml.dtos.CoverLetterDTO;
 import com.siit.xml.dtos.FileGenDTO;
+import com.siit.xml.dtos.ReviewDTO;
 import com.siit.xml.service.ReviewService;
 
 @Component
@@ -55,8 +55,8 @@ public class ReviewController {
     		value = "/save",
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity save(@RequestBody CoverLetterDTO coverLetter) {
-    	return new ResponseEntity<String>(reviewService.saveReview(coverLetter),HttpStatus.OK);
+    public ResponseEntity save(@RequestBody ReviewDTO reviewDTO) {
+    	return new ResponseEntity<String>(reviewService.saveReview(reviewDTO),HttpStatus.OK);
     }
 
 
@@ -68,8 +68,28 @@ public class ReviewController {
 	//@ResponseBody
     public FileSystemResource getFile(@RequestBody FileGenDTO data, HttpServletResponse response) {
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-disposition", "attachment; filename=user.xml");
 		File f = reviewService.getFile(data);
+		if(f == null) {
+			return null;
+		}
+		try {
+			InputStream stream = new FileInputStream(f);
+		} catch (FileNotFoundException e) {
+			//e.printStackTrace();
+			return null;
+		}
+		return new FileSystemResource(f);
+	}
+
+	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
+	@RequestMapping(
+			value = "/fileMerged",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+	//@ResponseBody
+    public FileSystemResource getFileMerged(@RequestBody FileGenDTO data, HttpServletResponse response) {
+		response.setContentType("application/octet-stream");
+		File f = reviewService.getFileMerged(data);
 		if(f == null) {
 			return null;
 		}

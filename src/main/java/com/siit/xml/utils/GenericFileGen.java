@@ -21,7 +21,8 @@ public class GenericFileGen {
 	public static final Map<String,String> xslPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/User.xsl");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","src/main/resources/data/xsl/CoverLetter.xsl");
-		put("com.siit.xml.modelCoverReview.CoverReview","src/main/resources/data/xsl/Review.xsl");
+		put("com.siit.xml.modelReview.Review","src/main/resources/data/xsl/Review.xsl");
+		put("com.siit.xml.modelReviews.Reviews","src/main/resources/data/xsl/Reviews.xsl");
 	}};
 	
 	
@@ -34,6 +35,8 @@ public class GenericFileGen {
     	String className = getClassName(writeValue);
     	String modelPath = MyGenericDatabase.jaxbPathMap.get(className);
     	String schemaPath = MyGenericDatabase.schemaPathMap.get(className);
+    	
+    	System.out.println(className);
     	
     	try {
 	        JAXBContext context = JAXBContext.newInstance(modelPath);

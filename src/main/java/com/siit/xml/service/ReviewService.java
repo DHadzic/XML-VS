@@ -9,12 +9,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.siit.xml.dtos.AuthorDTO;
-import com.siit.xml.dtos.CoverLetterDTO;
 import com.siit.xml.dtos.FileGenDTO;
-import com.siit.xml.modelCoverLetter.AuthorData;
-import com.siit.xml.modelCoverLetter.CoverLetter;
-import com.siit.xml.modelCoverLetter.ObjectFactory;
+import com.siit.xml.dtos.ReviewDTO;
+import com.siit.xml.modelReview.Authors;
+import com.siit.xml.modelReview.ObjectFactory;
+import com.siit.xml.modelReview.Review;
 import com.siit.xml.repository.ReviewRepository;
 
 @Component
@@ -42,26 +41,30 @@ public class ReviewService {
 		return reviewRep.saveXML(f);
 	}
 	
-	public String saveReview(CoverLetterDTO coverLetterDTO) {
-		CoverLetter coverLetter = new ObjectFactory().createCoverLetter();
-		coverLetter.setContent(coverLetterDTO.getContent());
-		coverLetter.setManuscriptTitle(coverLetterDTO.getManuscriptTitle());
-		coverLetter.setPaperId(coverLetterDTO.getPaperId());
-		AuthorData auth = null;
-		for (AuthorDTO author : coverLetterDTO.getAuthorData()) {
-			auth = new AuthorData();
-			if(author.getAuthorsName() != null ) auth.setAuthorsName(author.getAuthorsName());
-			if(author.getAuthorsEmail() != null ) auth.setAuthorsEmail(author.getAuthorsEmail());
-			if(author.getAuthorsPhone() != null ) auth.setAuthorsPhone(author.getAuthorsPhone());
-			if(author.getAuthorsAddress() != null ) auth.setAuthorsAddress(author.getAuthorsAddress());
-			coverLetter.getAuthorData().add(auth);
+	public String saveReview(ReviewDTO reviewDTO) {
+		Review review = new ObjectFactory().createReview();
+		
+		review.setPaperId(reviewDTO.getPaperId());
+		review.setReviewedBy(reviewDTO.getReviewedBy());
+		review.setComment(reviewDTO.getComment());
+		review.setRateReadability(reviewDTO.getRateReadability());
+		review.setRateOriginality(reviewDTO.getRateOriginality());
+		review.setRateSubject(reviewDTO.getRateSubject());
+		if(reviewDTO.getAuthors() == null) return "Bad input data";
+		review.setAuthors(new Authors());
+		for (String username : reviewDTO.getAuthors()) {
+			review.getAuthors().getUsername().add(username);
 		}
 		
-		return "";//reviewRep.save(coverLetter);
+		return reviewRep.save(review);
 	}
 
 	public File getFile(FileGenDTO data) {
 		return reviewRep.getFile(data);
+	}
+
+	public File getFileMerged(FileGenDTO data) {
+		return reviewRep.getFileMerged(data);
 	}
 
 }

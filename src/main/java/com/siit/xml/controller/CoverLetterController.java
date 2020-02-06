@@ -69,7 +69,6 @@ public class CoverLetterController {
 	//@ResponseBody
     public FileSystemResource getFile(@RequestBody FileGenDTO data, HttpServletResponse response) {
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-disposition", "attachment; filename=user.xml");
 		File f = clService.getFile(data);
 		if(f == null) {
 			return null;

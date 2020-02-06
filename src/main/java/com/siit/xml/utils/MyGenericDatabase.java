@@ -40,21 +40,25 @@ public class MyGenericDatabase {
 		put("com.siit.xml.modelUser.User","/db/paper_publish/user");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","/db/paper_publish/coverLetter");
 		put("com.siit.xml.modelReview.Review","/db/paper_publish/review");
+		put("com.siit.xml.modelReviews.Reviews","/db/paper_publish/reviews");
 		}};
 	public static final Map<String,String> jaxbPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","com.siit.xml.modelUser");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","com.siit.xml.modelCoverLetter");
 		put("com.siit.xml.modelReview.Review","com.siit.xml.modelReview");
+		put("com.siit.xml.modelReviews.Reviews","com.siit.xml.modelReviews");
 		}};
 	public static final Map<String,String> schemaPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","data/schemas/User.xsd");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","data/schemas/CoverLetter.xsd");
 		put("com.siit.xml.modelReview.Review","data/schemas/Review.xsd");
+		put("com.siit.xml.modelReviews.Reviews","data/schemas/Reviews.xsd");
 		}};
 	public static final Map<String,String> namespaceMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","http://localhost:8080/User");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","http://localhost:8080/CoverLetter");
 		put("com.siit.xml.modelCoverReview.Review","http://localhost:8080/Review");
+		put("com.siit.xml.modelCoverReviews.Reviews","http://localhost:8080/Reviews");
 		}};
     
     public <T> void saveResourse(T writeValue, String entityId) throws Exception {
@@ -72,7 +76,8 @@ public class MyGenericDatabase {
     	
     	try {
     		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
-        	resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
+    		if(givenClass.endsWith("Review")) entityId = Long.toString(col.getResourceCount());
+    		resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
         	
         	Marshaller marshaller = getMarshaller(modelPath,schemaPath);
         	marshaller.marshal(writeValue, os);
@@ -170,7 +175,6 @@ public class MyGenericDatabase {
         xpathService.setNamespace("", namespace);
     	
     	ResourceSet result = xpathService.query(xpath);
-    	System.out.println(result.getSize());
     	ResourceIterator i = result.getIterator();
     	Resource next = null;
     	Unmarshaller unmarshaller = getUnmarshaller(modelPath);

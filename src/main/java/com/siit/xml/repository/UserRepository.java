@@ -52,7 +52,7 @@ public class UserRepository {
 	}
 	
 	public void updateUser(String username) {
-		db.updateResource(new User(), username, "/user/email", "NOVI EMAIL");
+		db.updateResource(new User(), username, "/user/email", "NOVI*");
 	}
 
 	public List<String> getReviewerUsernames() {

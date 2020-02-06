@@ -1,6 +1,7 @@
 package com.siit.xml.repository;
 
 import java.io.File;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,8 +9,8 @@ import org.springframework.stereotype.Component;
 import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.dtos.FileType;
 import com.siit.xml.model.publication.TPublication;
-import com.siit.xml.modelCoverLetter.CoverLetter;
 import com.siit.xml.modelReview.Review;
+import com.siit.xml.modelReviews.Reviews;
 import com.siit.xml.modelUser.User;
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
@@ -29,9 +30,9 @@ public class ReviewRepository {
 		
 		Review review = db.getClassFromXML(new Review(), xmlData);
 		
-		//if(review == null) { return "Bad input data1"; }
+		if(review == null) { return "Bad input data1"; }
 		
-		if(!checkReferences(review)) { return "References not good"; }
+		//if(!checkReferences(review)) { return "References not good"; }
 
 		if(!db.validateClassAgainstSchema(review)){
 			return "Bad input data2";
@@ -93,10 +94,10 @@ public class ReviewRepository {
 	}
 	
 	public File getFile(FileGenDTO data) {
-		CoverLetter coverLetter;
+		Review review;
 
 		try {
-			if( (coverLetter = db.getResourceById(new CoverLetter(), data.getId())) == null){
+			if( (review = db.getResourceById(new Review(), data.getId())) == null){
 				return null;
 			}
 		} catch (Exception e) {
@@ -105,19 +106,59 @@ public class ReviewRepository {
 		}
 		
 		if(data.getType() == FileType.XML) {
-			fileGenerator.generateXMLFile(coverLetter);
+			fileGenerator.generateXMLFile(review);
 			return new File(GenericFileGen.XML_LOCATION);
 		}else if (data.getType() == FileType.HTML){
-			fileGenerator.generateHTMLFile(coverLetter);
+			fileGenerator.generateHTMLFile(review);
 			return new File(PDFTransformer.HTML_FILE);
 		}else if (data.getType() == FileType.PDF){
-			fileGenerator.generatePDFFile(coverLetter);
+			fileGenerator.generatePDFFile(review);
+			System.out.println(GenericFileGen.PDF_LOCATION);
 			return new File(GenericFileGen.PDF_LOCATION);
 		}
 		
 		return null;
 	}
-	
+
+	public File getFileMerged(FileGenDTO data) {
+		List<Review> reviews;
+		Reviews retReviews = new Reviews();
+
+		/*try {
+			if(db.getResourceById(new TPublication(), data.getId()) == null){
+				return null;
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+			return null;
+		}*/
+		
+		try {
+			reviews = db.getByXPath(new Review(), "//Review[@paperId = \"" + data.getId() + "\"]");
+		} catch (Exception e1) {
+			//e1.printStackTrace();
+			return null;
+		}
+		
+		for (Review rev : reviews) {
+			retReviews.getReview().add(rev);
+		}
+		
+		if(data.getType() == FileType.XML) {
+			fileGenerator.generateXMLFile(retReviews);
+			return new File(GenericFileGen.XML_LOCATION);
+		}else if (data.getType() == FileType.HTML){
+			fileGenerator.generateHTMLFile(retReviews);
+			return new File(PDFTransformer.HTML_FILE);
+		}else if (data.getType() == FileType.PDF){
+			fileGenerator.generatePDFFile(retReviews);
+			System.out.println(GenericFileGen.PDF_LOCATION);
+			return new File(GenericFileGen.PDF_LOCATION);
+		}
+		
+		return null;
+	}
+
 	private boolean checkReferences(Review review) {
 		
 		try {
