@@ -19,7 +19,10 @@ public class GenericFileGen {
 	public static String XML_LOCATION = "generated/variable.xml";
 	public static String PDF_LOCATION = "generated/variable.pdf";
 	public static final Map<String,String> xslPathMap = new HashMap<String,String>() {{
-		put("com.siit.xml.modelUser.User","data/xsl/User.xsl");
+		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/User.xsl");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","src/main/resources/data/xsl/CoverLetter.xsl");
+		put("com.siit.xml.modelReview.Review","src/main/resources/data/xsl/Review.xsl");
+		put("com.siit.xml.modelReviews.Reviews","src/main/resources/data/xsl/Reviews.xsl");
 	}};
 	
 	
@@ -33,6 +36,8 @@ public class GenericFileGen {
     	String modelPath = MyGenericDatabase.jaxbPathMap.get(className);
     	String schemaPath = MyGenericDatabase.schemaPathMap.get(className);
     	
+    	System.out.println(className);
+    	
     	try {
 	        JAXBContext context = JAXBContext.newInstance(modelPath);
 	        Marshaller marshaller = context.createMarshaller();
@@ -40,7 +45,6 @@ public class GenericFileGen {
 	        String path = new ClassPathResource(schemaPath).getFile().getPath();
 	        marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, path);
 	        marshaller.marshal(writeValue, file);
-	        marshaller.marshal(writeValue, System.out);		
     	} catch ( Exception e ) {
     		e.printStackTrace();
     	}
@@ -48,13 +52,13 @@ public class GenericFileGen {
 	}
 	
 	public <T> void generateHTMLFile(T writeValue) {
+		generateXMLFile(writeValue);
 		
 		PDFTransformer pdfTransformer = new PDFTransformer();
 
 		String XSL_LOCATION = xslPathMap.get(getClassName(writeValue));
 		try {
 			pdfTransformer.generateHTML(XML_LOCATION, XSL_LOCATION);
-			pdfTransformer.generatePDF(PDF_LOCATION);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,7 +77,7 @@ public class GenericFileGen {
 		String XSL_LOCATION = xslPathMap.get(getClassName(writeValue));
 		try {
 			pdfTransformer.generateHTML(XML_LOCATION, XSL_LOCATION);
-			pdfTransformer.generatePDF(PDF_LOCATION);		
+			pdfTransformer.generatePDF(PDF_LOCATION);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,6 +85,15 @@ public class GenericFileGen {
 	}
 	
     public <T> String getClassName(T myObject) {
+    	Class<?> enclosingClass = myObject.getClass().getEnclosingClass();
+    	if (enclosingClass != null) {
+    		return enclosingClass.getName();
+    	} else {
+    		return myObject.getClass().getName();
+    	}    	
+    }
+    
+    public static <T> String getClassNameStatic(T myObject) {
     	Class<?> enclosingClass = myObject.getClass().getEnclosingClass();
     	if (enclosingClass != null) {
     		return enclosingClass.getName();

@@ -25,16 +25,11 @@ public class UserRepository {
 			return "Something went wrong";
 		}
 		
+		if(!db.validateClassAgainstSchema(user)) {
+			return "Bad input data";
+		}
+		
 		try {
-			/*
-			try {
-				boolean answer = true;
-				if(!(answer = db.validateClassAgainstSchema(user))) {
-					System.out.println(answer);
-					return "Bad input format";
-				}
-			} catch( Exception e) { return "Bad input format"; }
-			*/
 			db.saveResourse(user, user.getUsername());
 		}catch ( Exception e){
 			//e.printStackTrace();
@@ -50,6 +45,14 @@ public class UserRepository {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void removeUser(String username) {
+		db.deleteResource(new User(), username);
+	}
+	
+	public void updateUser(String username) {
+		db.updateResource(new User(), username, "/user/email", "NOVI*");
 	}
 
 	public List<String> getReviewerUsernames() {

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:reviews xmlns="http://localhost:8080/Review" xmlns:ns2="http://localhost:8080/Reviews" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="C:\Users\Damir\Desktop\xml_naucniradovi\xml\target\classes\data\schemas\Reviews.xsd"/>

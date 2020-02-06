@@ -1,0 +1,53 @@
+[33mcommit 211de8681926e852bb920e0f2f57662f2ecf26bc[m
+Author: srbulovicdusan <srbulovicdusan@gmail.com>
+Date:   Thu Feb 6 22:47:15 2020 +0100
+
+    Publication id
+
+[33mcommit b3f9d3523c2926dcebb428ac176e074579daae2a[m
+Author: srbulovicdusan <srbulovicdusan@gmail.com>
+Date:   Thu Feb 6 18:45:41 2020 +0100
+
+    Publication crud
+
+[33mcommit d8e94783bbc4bb9c6866908687d7eb4e07b7d546[m
+Author: srbulovicdusan <srbulovicdusan@gmail.com>
+Date:   Wed Feb 5 19:27:02 2020 +0100
+
+    Publication model
+
+[33mcommit 594c96c1f7443cea5db3c04cb9335f0fbcffdc12[m
+Author: DHadzic <damirhadzic996@gmail.com>
+Date:   Wed Feb 5 05:49:24 2020 +0100
+
+    Util class for generic file generating
+
+[33mcommit 98aeed8f7584fdd6c2c51564efef4fddacc15c2c[m
+Author: DHadzic <damirhadzic996@gmail.com>
+Date:   Wed Feb 5 04:13:33 2020 +0100
+
+    Save from XML string/ XML file generic
+
+[33mcommit 3f9bb1372b06668aff400ca64942e7592f9d4ad9[m
+Author: DHadzic <damirhadzic996@gmail.com>
+Date:   Tue Feb 4 23:19:57 2020 +0100
+
+    Minor improvements. Added cast from XML str to class
+
+[33mcommit ce09363bbc32e468580e05d827efc25ea9045693[m
+Author: DHadzic <damirhadzic996@gmail.com>
+Date:   Tue Feb 4 05:00:58 2020 +0100
+
+    Security , ceo user model.
+
+[33mcommit 06c529dd66ebecff3496d9873e1060c3ea7f7a24[m
+Author: DHadzic <damirhadzic996@gmail.com>
+Date:   Sun Feb 2 18:20:55 2020 +0100
+
+    User register imlementation
+
+[33mcommit 1fce26b62ec87820464040ee6ca3a0ab8748fa61[m
+Author: DHadzic <damirhadzic996@gmail.com>
+Date:   Sun Feb 2 16:04:00 2020 +0100
+
+    Init commit

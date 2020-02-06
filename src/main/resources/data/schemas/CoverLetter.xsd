@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://localhost:8080/CoverLetter" xmlns:u="http://localhost:8080/CoverLetter">
+
+    <xs:element name="CoverLetter">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="AuthorData" type="u:AuthorData"/>
+                <xs:element name="Content" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="paperId" type="xs:string" use="required"/>
+            <xs:attribute name="paperTitle" type="xs:string" use="required"/>
+            <xs:attribute name="commitDate" type="xs:date"/>
+            <xs:attribute name="manuscriptTitle" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="AuthorData">
+        <xs:sequence>
+            <xs:element name="authorsName" type="xs:string"/>
+            <xs:element name="authorsEmail" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="authorsPhone" type="xs:string" use="optional"/>
+        <xs:attribute name="authorsAddress" type="xs:string" use="optional"/>
+    </xs:complexType>
+</xs:schema>

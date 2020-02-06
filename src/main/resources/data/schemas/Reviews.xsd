@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://localhost:8080/Reviews"
+    xmlns:r="http://localhost:8080/Review" xmlns:reviews="http://localhost:8080/Review">
+
+    <xs:import namespace="http://localhost:8080/Review" schemaLocation="Review.xsd"/>
+
+    <xs:element name="reviews">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:Review" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

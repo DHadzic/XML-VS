@@ -26,7 +26,6 @@ public class PublicationRepository {
 		}
 		return "Succesful";
 	}
-	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(File xmlData) {
 		
 		User user = db.getClassFromXML(new User(), xmlData);
