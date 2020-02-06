@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.siit.xml.dtos.AuthorDTO;
@@ -15,16 +15,16 @@ import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.modelCoverLetter.AuthorData;
 import com.siit.xml.modelCoverLetter.CoverLetter;
 import com.siit.xml.modelCoverLetter.ObjectFactory;
-import com.siit.xml.repository.CoverLetterRepository;
+import com.siit.xml.repository.ReviewRepository;
 
-@Service
-public class CoverLetterService {
+@Component
+public class ReviewService {
 
 	@Autowired
-	CoverLetterRepository clRep;
+	ReviewRepository reviewRep;
 	
 	public String saveXML(String xmlData) {
-		return clRep.saveXML(xmlData);
+		return reviewRep.saveXML(xmlData);
 	}
 
 	public String saveXML(MultipartFile xmlFile) {
@@ -39,10 +39,10 @@ public class CoverLetterService {
 			e1.printStackTrace();
 			return "Bad input file";
 		}
-		return clRep.saveXML(f);
+		return reviewRep.saveXML(f);
 	}
 	
-	public String saveCoverLetter(CoverLetterDTO coverLetterDTO) {
+	public String saveReview(CoverLetterDTO coverLetterDTO) {
 		CoverLetter coverLetter = new ObjectFactory().createCoverLetter();
 		coverLetter.setContent(coverLetterDTO.getContent());
 		coverLetter.setManuscriptTitle(coverLetterDTO.getManuscriptTitle());
@@ -57,11 +57,11 @@ public class CoverLetterService {
 			coverLetter.getAuthorData().add(auth);
 		}
 		
-		return clRep.save(coverLetter);
+		return "";//reviewRep.save(coverLetter);
 	}
 
 	public File getFile(FileGenDTO data) {
-		return clRep.getFile(data);
+		return reviewRep.getFile(data);
 	}
 
 }

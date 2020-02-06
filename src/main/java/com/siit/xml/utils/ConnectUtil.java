@@ -27,6 +27,9 @@ public class ConnectUtil {
 		
 		try {
 			col = DatabaseManager.getCollection(conn.uri + collectionId);
+			if(col == null) {
+				
+			}
 	        col.setProperty(OutputKeys.INDENT, "yes");
 	        res = (XMLResource)col.getResource(documentId);
 		
@@ -36,7 +39,7 @@ public class ConnectUtil {
 		        return new DatabaseTouple(col,res);
 		    }
 	
-		} catch(Exception e){ e.printStackTrace(); return null; }
+		} catch(Exception e){ /*e.printStackTrace();*/ return null; }
 	    finally {
 	        if(res != null) {
 	            try {
@@ -65,11 +68,9 @@ public class ConnectUtil {
 	
 	public static Collection getOrCreateCollection(String collectionUri, int offset,
         AuthenticationUtilities.ConnectionProperties conn) throws XMLDBException {
-		//System.out.println(conn.uri);
-		//System.out.println(collectionUri);
 		Collection col = DatabaseManager.getCollection(conn.uri + collectionUri, conn.user, conn.password);
-        System.out.println(col);
-        // create the collection if it does not exist
+
+		// create the collection if it does not exist
         if(col == null) {
         
          	if(collectionUri.startsWith("/")) {
@@ -96,7 +97,6 @@ public class ConnectUtil {
                     
                     CollectionManagementService mgt = (CollectionManagementService) parentCol.getService("CollectionManagementService", "1.0");
                     
-                    System.out.println("[INFO] Creating the collection: " + pathSegments[offset]);
                     col = mgt.createCollection(pathSegments[offset]);
                     
                     col.close();

@@ -20,7 +20,8 @@ public class GenericFileGen {
 	public static String PDF_LOCATION = "generated/variable.pdf";
 	public static final Map<String,String> xslPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/User.xsl");
-		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/CoverLetter.xsl");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","src/main/resources/data/xsl/CoverLetter.xsl");
+		put("com.siit.xml.modelCoverReview.CoverReview","src/main/resources/data/xsl/Review.xsl");
 	}};
 	
 	
@@ -73,7 +74,7 @@ public class GenericFileGen {
 		String XSL_LOCATION = xslPathMap.get(getClassName(writeValue));
 		try {
 			pdfTransformer.generateHTML(XML_LOCATION, XSL_LOCATION);
-			pdfTransformer.generatePDF(PDF_LOCATION);		
+			pdfTransformer.generatePDF(PDF_LOCATION);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

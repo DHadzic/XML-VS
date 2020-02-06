@@ -18,11 +18,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 
 import org.exist.xmldb.EXistResource;
 import org.springframework.stereotype.Component;
-import org.xml.sax.ErrorHandler;
+import org.xml.sax.helpers.DefaultHandler;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -32,6 +31,7 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
+import org.xmldb.api.modules.XUpdateQueryService;
 
 @Component
 public class MyGenericDatabase {
@@ -39,18 +39,22 @@ public class MyGenericDatabase {
 	public static final Map<String,String> collectionIdMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","/db/paper_publish/user");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","/db/paper_publish/coverLetter");
+		put("com.siit.xml.modelReview.Review","/db/paper_publish/review");
 		}};
 	public static final Map<String,String> jaxbPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","com.siit.xml.modelUser");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","com.siit.xml.modelCoverLetter");
+		put("com.siit.xml.modelReview.Review","com.siit.xml.modelReview");
 		}};
 	public static final Map<String,String> schemaPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","data/schemas/User.xsd");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","data/schemas/CoverLetter.xsd");
+		put("com.siit.xml.modelReview.Review","data/schemas/Review.xsd");
 		}};
 	public static final Map<String,String> namespaceMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","http://localhost:8080/User");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","http://localhost:8080/CoverLetter");
+		put("com.siit.xml.modelCoverReview.Review","http://localhost:8080/Review");
 		}};
     
     public <T> void saveResourse(T writeValue, String entityId) throws Exception {
@@ -66,7 +70,6 @@ public class MyGenericDatabase {
     	Collection col = null;
     	OutputStream os = new ByteArrayOutputStream();
     	
-    	
     	try {
     		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
         	resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
@@ -76,7 +79,45 @@ public class MyGenericDatabase {
 
         	resource.setContent(os);
         	col.storeResource(resource);
-    	}	finally {
+    	}	finally 
+    	{
+    		if (resource != null) {
+    			try {
+    				((EXistResource)resource).freeResources();
+    			}catch( XMLDBException xe) {
+    				xe.printStackTrace();
+    			}
+    		}
+    		if(col != null) {
+    			try {
+    				col.close();
+    			} catch (XMLDBException xe) {
+    				xe.printStackTrace();
+    			}
+    		}
+    	}
+    }
+    
+    public <T> void deleteResource(T writeValue, String entityId) {
+    	String givenClass = getClassName(writeValue);
+    	String collectionId = collectionIdMap.get(givenClass);
+    	ConnectUtil connUtil = new ConnectUtil();
+    	XMLResource resource = null;
+    	Collection col = null;
+    	
+    	try {
+    	Database db = connUtil.connectToDatabase(AuthenticationUtilities.loadProperties());
+    	DatabaseManager.registerDatabase(db);
+    	OutputStream os = new ByteArrayOutputStream();
+    	
+    		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
+        	resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
+
+        	col.removeResource(resource);
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}	finally 
+    	{
     		if (resource != null) {
     			try {
     				((EXistResource)resource).freeResources();
@@ -151,10 +192,32 @@ public class MyGenericDatabase {
     	return retValue;
     }
     
+    public <T> boolean updateResource(T entity,String id, String aimXPath , String newValue) {
+    	String givenClass = getClassName(entity);
+    	String collectionId = collectionIdMap.get(givenClass);
+    	ConnectUtil con= new ConnectUtil();
+    	
+    	try {
+	    	Database db = con.connectToDatabase(AuthenticationUtilities.loadProperties());
+	    	DatabaseManager.registerDatabase(db);
+	    	
+	    	Collection col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
+	    	XUpdateQueryService xpathService = (XUpdateQueryService) col.getService("XUpdateQueryService","1.0");
+
+    		xpathService.updateResource(id,String.format(XUpdateTemplate.UPDATE, aimXPath, newValue));
+
+    	}catch( Exception e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
     public <T> T getClassFromXML(T myObject, String xml) {
     	String className = getClassName(myObject);
     	String modelPath = jaxbPathMap.get(className);
-    	try {
+   	try {
 	    	Unmarshaller unmarshaller = getUnmarshaller(modelPath);
 	    	return (T) JAXBIntrospector.getValue(unmarshaller.unmarshal(new StringReader(xml)));
     	} catch( Exception e) {
@@ -206,15 +269,18 @@ public class MyGenericDatabase {
     	String modelPath = jaxbPathMap.get(className);
     	String schemaPath = "src/main/resources/" + schemaPathMap.get(className);
     	try {
-	    	JAXBContext jc = JAXBContext.newInstance(modelPath);
+    		JAXBContext jc = JAXBContext.newInstance(modelPath);
 	        JAXBSource source = new JAXBSource(jc, myObject);
 	
 	        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI); 
 	        Schema schema = sf.newSchema(new File(schemaPath)); 
 	
-	        Validator validator = schema.newValidator();
-	        validator.setErrorHandler(null);
-	        validator.validate(source);
+    		Marshaller marshaller = jc.createMarshaller();
+    		marshaller.setSchema(schema);
+    		marshaller.marshal(myObject, new DefaultHandler());
+	        //Validator validator = schema.newValidator();
+	        //validator.setErrorHandler(null);
+	        //validator.validate(source);
 	        return true;
     	} catch ( Exception e) {
     		//e.printStackTrace();
