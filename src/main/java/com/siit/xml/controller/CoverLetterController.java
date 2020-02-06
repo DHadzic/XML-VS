@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siit.xml.dtos.CoverLetterDTO;
 import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.service.CoverLetterService;
 
@@ -50,6 +50,15 @@ public class CoverLetterController {
     public ResponseEntity saveXML(@RequestParam("file") MultipartFile xmlFile) {
 		return new ResponseEntity<String>(clService.saveXML(xmlFile),HttpStatus.OK);
     }
+	
+    @RequestMapping(
+    		value = "/save",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity register(@RequestBody CoverLetterDTO coverLetter) {
+    	return new ResponseEntity<String>(clService.saveCoverLetter(coverLetter),HttpStatus.OK);
+    }
+
 
 	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
 	@RequestMapping(

@@ -38,15 +38,19 @@ public class MyGenericDatabase {
 
 	public static final Map<String,String> collectionIdMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","/db/paper_publish/user");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","/db/paper_publish/coverLetter");
 		}};
 	public static final Map<String,String> jaxbPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","com.siit.xml.modelUser");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","com.siit.xml.modelCoverLetter");
 		}};
 	public static final Map<String,String> schemaPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","data/schemas/User.xsd");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","data/schemas/CoverLetter.xsd");
 		}};
 	public static final Map<String,String> namespaceMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","http://localhost:8080/User");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","http://localhost:8080/CoverLetter");
 		}};
     
     public <T> void saveResourse(T writeValue, String entityId) throws Exception {

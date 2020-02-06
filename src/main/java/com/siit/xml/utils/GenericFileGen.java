@@ -20,6 +20,7 @@ public class GenericFileGen {
 	public static String PDF_LOCATION = "generated/variable.pdf";
 	public static final Map<String,String> xslPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/User.xsl");
+		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/CoverLetter.xsl");
 	}};
 	
 	

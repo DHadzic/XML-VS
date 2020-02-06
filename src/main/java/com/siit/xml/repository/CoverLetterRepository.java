@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.dtos.FileType;
+import com.siit.xml.model.publication.TPublication;
+import com.siit.xml.modelCoverLetter.CoverLetter;
 import com.siit.xml.modelUser.User;
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
@@ -24,27 +26,71 @@ public class CoverLetterRepository {
 	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(String xmlData) {
 		
-		User user = db.getClassFromXML(new User(), xmlData);
-		
+		CoverLetter coverLetter = db.getClassFromXML(new CoverLetter(), xmlData);
+
 		try {
-			db.saveResourse(user, user.getUsername());
+			if(db.getResourceById(new TPublication(), coverLetter.getPaperId()) == null) {
+				return "Invalid paper id";
+			}
 		} catch (Exception e) {
+			return "Invalid paper id";
 			//e.printStackTrace();
-			return "Bad input data";
+		}
+
+		String id;
+		try {
+			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			db.saveResourse(coverLetter, id);
+		} catch (Exception e) {
+			return "Something went wrong";
+			//e.printStackTrace();
 		}
 		return "Succesful";
 	}
 
 	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(File xmlData) {
-		
-		User user = db.getClassFromXML(new User(), xmlData);
+		CoverLetter coverLetter = db.getClassFromXML(new CoverLetter(), xmlData);
 
 		try {
-			db.saveResourse(user, user.getUsername().toString());
+			if(db.getResourceById(new TPublication(), coverLetter.getPaperId()) == null) {
+				return "Invalid paper id";
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			return "Bad input data";
+			return "Invalid paper id";
+			//e.printStackTrace();
+		}
+
+		String id;
+		try {
+			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			db.saveResourse(coverLetter, id);
+		} catch (Exception e) {
+			return "Something went wrong";
+			//e.printStackTrace();
+		}
+		
+		return "Succesful";
+	}
+	
+	public String save(CoverLetter coverLetter) {
+		
+		try {
+			if(db.getResourceById(new TPublication(), coverLetter.getPaperId()) == null) {
+				return "Invalid paper id";
+			}
+		} catch (Exception e) {
+			return "Invalid paper id";
+			//e.printStackTrace();
+		}
+		
+		String id;
+		try {
+			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			db.saveResourse(coverLetter, id);
+		} catch (Exception e) {
+			return "Something went wrong";
+			//e.printStackTrace();
 		}
 		
 		return "Succesful";

@@ -9,7 +9,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.siit.xml.dtos.AuthorDTO;
+import com.siit.xml.dtos.CoverLetterDTO;
 import com.siit.xml.dtos.FileGenDTO;
+import com.siit.xml.modelCoverLetter.AuthorData;
+import com.siit.xml.modelCoverLetter.CoverLetter;
+import com.siit.xml.modelCoverLetter.ObjectFactory;
 import com.siit.xml.repository.CoverLetterRepository;
 
 @Service
@@ -37,6 +42,23 @@ public class CoverLetterService {
 		return clRep.saveXML(f);
 	}
 	
+	public String saveCoverLetter(CoverLetterDTO coverLetterDTO) {
+		CoverLetter coverLetter = new ObjectFactory().createCoverLetter();
+		coverLetter.setContent(coverLetterDTO.getContent());
+		coverLetter.setManuscriptTitle(coverLetterDTO.getManuscriptTitle());
+		coverLetter.setPaperId(coverLetterDTO.getPaperId());
+		AuthorData auth = null;
+		for (AuthorDTO author : coverLetterDTO.getAuthorData()) {
+			auth = new AuthorData();
+			auth.setAuthorsName(author.getAuthorsName());
+			auth.setAuthorsEmail(author.getAuthorsEmail());
+			if(author.getAuthorsPhone() != null ) auth.setAuthorsPhone(author.getAuthorsPhone());
+			if(author.getAuthorsAddress() != null ) auth.setAuthorsAddress(author.getAuthorsAddress());
+			coverLetter.getAuthorData().add(auth);
+		}
+		return clRep.save(coverLetter);
+	}
+
 	public File getFile(FileGenDTO data) {
 		return clRep.getFile(data);
 	}
