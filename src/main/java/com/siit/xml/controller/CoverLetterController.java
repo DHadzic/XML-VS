@@ -1,8 +1,14 @@
 package com.siit.xml.controller;
 
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.siit.xml.modelUser.User;
+import com.siit.xml.dtos.CoverLetterDTO;
+import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.service.CoverLetterService;
 
 @RestController
@@ -43,4 +50,35 @@ public class CoverLetterController {
     public ResponseEntity saveXML(@RequestParam("file") MultipartFile xmlFile) {
 		return new ResponseEntity<String>(clService.saveXML(xmlFile),HttpStatus.OK);
     }
+	
+    @RequestMapping(
+    		value = "/save",
+            method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity register(@RequestBody CoverLetterDTO coverLetter) {
+    	return new ResponseEntity<String>(clService.saveCoverLetter(coverLetter),HttpStatus.OK);
+    }
+
+
+	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
+	@RequestMapping(
+			value = "/file",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+	//@ResponseBody
+    public FileSystemResource getFile(@RequestBody FileGenDTO data, HttpServletResponse response) {
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-disposition", "attachment; filename=user.xml");
+		File f = clService.getFile(data);
+		if(f == null) {
+			return null;
+		}
+		try {
+			InputStream stream = new FileInputStream(f);
+		} catch (FileNotFoundException e) {
+			//e.printStackTrace();
+			return null;
+		}
+		return new FileSystemResource(f);
+	}
 }

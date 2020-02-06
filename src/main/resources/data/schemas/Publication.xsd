@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://foo.bar" xmlns="http://foo.bar" xmlns:t="http://foo.bar"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:complexType name="TPublication">
+        <xs:sequence>
+            <xs:element name="basicInformations" type="t:TBasicInformation"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="paragraph" type="t:TParagraph"/>
+            <xs:element maxOccurs="unbounded" name="reference" type="t:TReference"/>
+        </xs:sequence>
+        <xs:attribute name="language" type="xs:string"/>
+        <xs:attribute form="unqualified" name="publicationId" type="xs:string"/>
+        <xs:attribute name="status" default="reviewing">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="reviewing"/>
+                    <xs:enumeration value="deleted"/>
+                    <xs:enumeration value="rejected"/>
+                    <xs:enumeration value="accepted"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="created" type="xs:date"/>
+    </xs:complexType>
+    <xs:complexType name="TReviewer">
+        <xs:sequence>
+            <xs:element name="reviewerUsername" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TReference">
+        <xs:sequence>
+            <xs:element name="authorName" type="xs:string"/>
+            <xs:element name="paperTitle" type="xs:string"/>
+            <xs:element name="year" type="xs:positiveInteger"/>
+        </xs:sequence>
+        <xs:attribute name="citationId" type="xs:integer" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="TBasicInformation">
+        <xs:sequence>
+            <xs:element maxOccurs="1" name="title" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="authors" type="TAuthor"/>
+            <xs:element name="reviewers" type="t:TReviewer"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="keywords" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAuthor">
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="authorUsename" type="xs:string"/>
+                <xs:element name="authorInstitution" type="xs:string"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TParagraph">
+        <xs:sequence>
+            <xs:element name="paragraphTitle" type="xs:string"/>
+            <xs:choice maxOccurs="unbounded" minOccurs="1">
+                <xs:element maxOccurs="1" name="text" type="xs:string"/>
+                <xs:element name="citation" type="t:TCitation"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TCitation">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="authorName" type="xs:string"/>
+            <xs:element name="year" type="xs:positiveInteger"/>
+            <xs:element name="text" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:integer" use="required"/>
+    </xs:complexType>
+    <xs:element name="SciencePaper" type="t:TPublication">
+        <xs:key name="id">
+            <xs:selector xpath="t:paragraph/t:citation"/>
+            <xs:field xpath="@id"/>
+        </xs:key>
+        <xs:keyref name="citationId" refer="id">
+            <xs:selector xpath="t:reference"/>
+            <xs:field xpath="@citationId"/>
+        </xs:keyref>
+        <xs:unique name="uniqueCitationId">
+            <xs:selector xpath="t:paragraph/t:citation"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        <xs:unique name="uniqueRefId">
+            <xs:selector xpath="t:reference"/>
+            <xs:field xpath="@citationId"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>

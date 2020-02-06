@@ -25,16 +25,11 @@ public class UserRepository {
 			return "Something went wrong";
 		}
 		
+		if(!db.validateClassAgainstSchema(user)) {
+			return "Bad input data";
+		}
+		
 		try {
-			/*
-			try {
-				boolean answer = true;
-				if(!(answer = db.validateClassAgainstSchema(user))) {
-					System.out.println(answer);
-					return "Bad input format";
-				}
-			} catch( Exception e) { return "Bad input format"; }
-			*/
 			db.saveResourse(user, user.getUsername());
 		}catch ( Exception e){
 			//e.printStackTrace();
