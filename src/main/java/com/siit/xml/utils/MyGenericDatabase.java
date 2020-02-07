@@ -41,24 +41,28 @@ public class MyGenericDatabase {
 		put("com.siit.xml.modelCoverLetter.CoverLetter","/db/paper_publish/coverLetter");
 		put("com.siit.xml.modelReview.Review","/db/paper_publish/review");
 		put("com.siit.xml.modelReviews.Reviews","/db/paper_publish/reviews");
+		put("com.siit.xml.modelRequest.ReviewRequest","/db/paper_publish/request");
 		}};
 	public static final Map<String,String> jaxbPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","com.siit.xml.modelUser");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","com.siit.xml.modelCoverLetter");
 		put("com.siit.xml.modelReview.Review","com.siit.xml.modelReview");
 		put("com.siit.xml.modelReviews.Reviews","com.siit.xml.modelReviews");
+		put("com.siit.xml.modelRequest.ReviewRequest","com.siit.xml.modelRequest");
 		}};
 	public static final Map<String,String> schemaPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","data/schemas/User.xsd");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","data/schemas/CoverLetter.xsd");
 		put("com.siit.xml.modelReview.Review","data/schemas/Review.xsd");
 		put("com.siit.xml.modelReviews.Reviews","data/schemas/Reviews.xsd");
+		put("com.siit.xml.modelRequest.ReviewRequest","data/schemas/ReviewRequest.xsd");
 		}};
 	public static final Map<String,String> namespaceMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","http://localhost:8080/User");
 		put("com.siit.xml.modelCoverLetter.CoverLetter","http://localhost:8080/CoverLetter");
 		put("com.siit.xml.modelCoverReview.Review","http://localhost:8080/Review");
 		put("com.siit.xml.modelCoverReviews.Reviews","http://localhost:8080/Reviews");
+		put("com.siit.xml.modelRequest.ReviewRequest","http://localhost:8080/ReviewRequest");
 		}};
     
     public <T> void saveResourse(T writeValue, String entityId) throws Exception {
@@ -76,7 +80,6 @@ public class MyGenericDatabase {
     	
     	try {
     		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
-    		if(givenClass.endsWith("Review")) entityId = Long.toString(col.getResourceCount());
     		resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
         	
         	Marshaller marshaller = getMarshaller(modelPath,schemaPath);
@@ -103,6 +106,23 @@ public class MyGenericDatabase {
     	}
     }
     
+    public <T> String getNewId(T writeValue) throws Exception {
+    	String givenClass = getClassName(writeValue);
+    	String collectionId = collectionIdMap.get(givenClass);
+    	String modelPath = jaxbPathMap.get(givenClass);
+    	String schemaPath = schemaPathMap.get(givenClass);
+    	ConnectUtil connUtil = new ConnectUtil();
+    	
+    	Database db = connUtil.connectToDatabase(AuthenticationUtilities.loadProperties());
+    	DatabaseManager.registerDatabase(db);
+    	XMLResource resource = null;
+    	Collection col = null;
+    	OutputStream os = new ByteArrayOutputStream();
+    	
+		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
+		return col.createId();
+    }
+    
     public <T> void deleteResource(T writeValue, String entityId) {
     	String givenClass = getClassName(writeValue);
     	String collectionId = collectionIdMap.get(givenClass);
@@ -117,7 +137,6 @@ public class MyGenericDatabase {
     	
     		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
         	resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
-
         	col.removeResource(resource);
     	} catch(Exception e) {
     		e.printStackTrace();
@@ -147,7 +166,7 @@ public class MyGenericDatabase {
     	ConnectUtil con = new ConnectUtil();
     	DatabaseTouple dbt;
     	try {
-    		dbt = con.getReourceById(collectionId,entityId,AuthenticationUtilities.loadProperties());		
+    		dbt = con.getReourceById(collectionId,entityId,AuthenticationUtilities.loadProperties());	
     	} catch ( NullPointerException e) {
     		return null;
     	}
@@ -166,14 +185,15 @@ public class MyGenericDatabase {
     	String namespace = namespaceMap.get(givenClass);
     	ConnectUtil con= new ConnectUtil();
     	
+    	
     	Database db = con.connectToDatabase(AuthenticationUtilities.loadProperties());
     	DatabaseManager.registerDatabase(db);
     	
     	Collection col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
     	XPathQueryService xpathService = (XPathQueryService) col.getService("XPathQueryService","1.0");
     	xpathService.setProperty("indent", "yes");
-        xpathService.setNamespace("", namespace);
-    	
+    	xpathService.setNamespace("", namespace);
+   	
     	ResourceSet result = xpathService.query(xpath);
     	ResourceIterator i = result.getIterator();
     	Resource next = null;
@@ -182,6 +202,7 @@ public class MyGenericDatabase {
     	ArrayList<T> retValue = new ArrayList<T>();
     	while(i.hasMoreResources()) {
     		try {
+    			System.out.println("HEEELOOO");
         		next = i.nextResource();
         		retValue.add((T) unmarshaller.unmarshal(((XMLResource)next).getContentAsDOM()));    			
     		} finally {
@@ -194,6 +215,25 @@ public class MyGenericDatabase {
     	}
     	
     	return retValue;
+    }
+    
+    public <T> int countResources(T entity) {
+    	String givenClass = getClassName(entity);
+    	String collectionId = collectionIdMap.get(givenClass);
+    	ConnectUtil connUtil = new ConnectUtil();
+    	XMLResource resource = null;
+    	Collection col = null;
+    	
+    	try {
+    	Database db = connUtil.connectToDatabase(AuthenticationUtilities.loadProperties());
+    	DatabaseManager.registerDatabase(db);
+    	OutputStream os = new ByteArrayOutputStream();
+    	
+		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
+		return col.getResourceCount();
+    	} catch (Exception e){
+    		return 0;
+    	}
     }
     
     public <T> boolean updateResource(T entity,String id, String aimXPath , String newValue) {

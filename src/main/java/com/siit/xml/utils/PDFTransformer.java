@@ -97,8 +97,8 @@ public class PDFTransformer {
 			DOMSource source = new DOMSource(buildDocument(xmlPath));
 			StringWriter outWriter = new StringWriter();
 			StreamResult result = new StreamResult(new FileOutputStream(HTML_FILE));
-			
 			transformer.transform(source, result);
+			
 			StringBuffer sb = outWriter.getBuffer();
 			
 		} catch (TransformerConfigurationException e) {

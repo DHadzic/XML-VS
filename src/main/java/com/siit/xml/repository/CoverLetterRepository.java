@@ -9,6 +9,7 @@ import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.dtos.FileType;
 import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.modelCoverLetter.CoverLetter;
+import com.siit.xml.modelReview.Review;
 import com.siit.xml.modelUser.User;
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
@@ -23,7 +24,6 @@ public class CoverLetterRepository {
 	@Autowired
 	GenericFileGen fileGenerator;
 
-	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(String xmlData) {
 		
 		CoverLetter coverLetter = db.getClassFromXML(new CoverLetter(), xmlData);
@@ -45,16 +45,15 @@ public class CoverLetterRepository {
 
 		String id;
 		try {
-			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			id = new Integer(db.countResources(new CoverLetter())).toString();
 			db.saveResourse(coverLetter, id);
 		} catch (Exception e) {
 			return "Something went wrong";
 			//e.printStackTrace();
 		}
-		return "Succesful";
+		return "Successful";
 	}
 
-	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(File xmlData) {
 		CoverLetter coverLetter = db.getClassFromXML(new CoverLetter(), xmlData);
 
@@ -75,14 +74,14 @@ public class CoverLetterRepository {
 
 		String id;
 		try {
-			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			id = new Integer(db.countResources(new CoverLetter())).toString();
 			db.saveResourse(coverLetter, id);
 		} catch (Exception e) {
 			return "Something went wrong";
 			//e.printStackTrace();
 		}
 		
-		return "Succesful";
+		return "Successful";
 	}
 	
 	public String save(CoverLetter coverLetter) {
@@ -96,7 +95,7 @@ public class CoverLetterRepository {
 		
 		String id;
 		try {
-			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			id = new Integer(db.countResources(new CoverLetter())).toString();
 			db.saveResourse(coverLetter, id);
 		} catch (Exception e) {
 			return "Something went wrong";
