@@ -37,7 +37,6 @@ public class GenericFileGen {
     	String modelPath = MyGenericDatabase.jaxbPathMap.get(className);
     	String schemaPath = MyGenericDatabase.schemaPathMap.get(className);
     	
-    	System.out.println(className);
     	
     	try {
 	        JAXBContext context = JAXBContext.newInstance(modelPath);

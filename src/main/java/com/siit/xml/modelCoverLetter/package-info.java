@@ -7,4 +7,3 @@
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://localhost:8080/CoverLetter", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.siit.xml.modelCoverLetter;
-

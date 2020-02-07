@@ -1,4 +1,9 @@
 
+
+/**
+ * http://xmldb-org.sourceforge.net/xupdate/xupdate-wd.html
+ * 
+ */
 package com.siit.xml.utils;
 
 import org.exist.xupdate.XUpdateProcessor;
@@ -9,7 +14,7 @@ import org.exist.xupdate.XUpdateProcessor;
  */
 public class XUpdateTemplate {
 
-	public static String TARGET_NAMESPACE = "http://foo.bar";
+	public static String TARGET_NAMESPACE = "http://www.ftn.uns.ac.rs/examples/xmldb/bookstore";
 	
 	/*
 	 * There are two instructions in XUpdate that support insertion of nodes:

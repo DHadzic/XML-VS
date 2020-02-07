@@ -12,7 +12,7 @@ import com.siit.xml.exceptions.NotFoundException;
 import com.siit.xml.exceptions.UnprocessableEntityException;
 import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.model.publication.TReviewer;
-import com.siit.xml.modelCoverLetter.CoverLetter;
+import com.siit.xml.service.EmailService;
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
 import com.siit.xml.utils.PDFTransformer;
@@ -23,6 +23,8 @@ public class PublicationRepository {
 	MyGenericDatabase db;
 	@Autowired
 	GenericFileGen fileGenerator;
+	@Autowired
+	EmailService emailService;
 	public TPublication saveXML(String xmlData) throws UnprocessableEntityException {
 		
 		TPublication publication = db.getClassFromXML(new TPublication(), xmlData);
@@ -32,6 +34,7 @@ public class PublicationRepository {
 		
 		try {
 			db.saveResourse(publication, publication.getPublicationId());
+			emailService.send("srbulovicdusan@gmail.com", "Naucni rad", "Nucni rad " + publication.getBasicInformations().getTitle().getValue() + " je dodat u sistem.");
 		} catch (Exception e) {
 			throw new BadRequestException("Unexpected error");
 		}

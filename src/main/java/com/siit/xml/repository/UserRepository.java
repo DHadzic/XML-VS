@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.siit.xml.modelReview.Review;
 import com.siit.xml.modelUser.User;
 import com.siit.xml.utils.MyGenericDatabase;
 
@@ -35,12 +36,12 @@ public class UserRepository {
 			//e.printStackTrace();
 			return "User was not stored";
 		}
-		return "Succesful";
+		return "Successful";
 	}
 	
 	public List<User> getAll() {
 		try {
-			return db.getByXPath(new User(), "//user");			
+			return db.getByXPath(new User(), "//user");
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			return null;
