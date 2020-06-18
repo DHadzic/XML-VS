@@ -22,6 +22,13 @@ public class UserService {
 	}
 	
 	public String registerUser(UserDTO userDTO) {
+		
+		System.out.println(userDTO.getUsername());
+		System.out.println(userDTO.getEmail());
+		System.out.println(userDTO.getPassword());
+		System.out.println(userDTO.getRole());
+		System.out.println(userDTO.getFullname());
+		
 		User user = (new ObjectFactory()).createUser();
 		user.setUsername(userDTO.getUsername());
     	BCryptPasswordEncoder coder = new BCryptPasswordEncoder();
@@ -29,7 +36,7 @@ public class UserService {
 		user.setFullName(userDTO.getFullname());
 		user.setEmail(userDTO.getEmail());
 		user.setRole(userDTO.getRole());
-				
+		
 		return userRep.saveUser(user);
 	}
 	

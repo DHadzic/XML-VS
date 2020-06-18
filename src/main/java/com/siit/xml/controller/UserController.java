@@ -13,7 +13,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,10 +55,10 @@ public class UserController {
         try {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                     loginDTO.getUsername(), loginDTO.getPassword());
-            authenticationManager.authenticate(token);
             User user = this.userService.findByUsername(loginDTO.getUsername());
-
+            if(user == null) throw new UsernameNotFoundException("No user found");
             UserDetails details = userDetailsService.loadUserByUsername(loginDTO.getUsername());
+            authenticationManager.authenticate(token);
             Long id = Long.parseLong(user.getUsername().toString(),Character.MAX_RADIX);
             TokenDTO userToken = new TokenDTO(jwtUtils.generateToken(details, id));
             return new ResponseEntity<>(userToken, HttpStatus.OK);
@@ -64,7 +66,7 @@ public class UserController {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }

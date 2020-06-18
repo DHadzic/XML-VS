@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //http.cors();
+        http.cors();
         http.csrf().disable().antMatcher("/**")
         		.sessionManagement()
         		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.addFilterBefore(authenticationTokenFilterBean(),
 				UsernamePasswordAuthenticationFilter.class);
     }
-
+    
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -83,4 +83,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 }

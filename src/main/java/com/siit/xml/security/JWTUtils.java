@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -71,7 +73,14 @@ public class JWTUtils {
     public String generateToken(UserDetails userDetails, Long id) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", userDetails.getUsername());
-        claims.put("created", new Date(System.currentTimeMillis()));
+		Iterator<? extends GrantedAuthority> iter = userDetails.getAuthorities().iterator();
+		String auth_string = "";
+		while(iter.hasNext()) {
+			auth_string += ((SimpleGrantedAuthority)iter.next()).getAuthority() + ",";
+		}
+		auth_string = auth_string.substring(0,auth_string.length()-1);
+		claims.put("roles", auth_string);
+		claims.put("created", new Date(System.currentTimeMillis()));
         claims.put("id", id);
         return Jwts.builder().setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))

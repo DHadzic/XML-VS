@@ -1,0 +1,4 @@
+<div>
+  <app-login *ngIf="isLoginDisplayed" (changeDisplay)="changeDisplay($event)"></app-login>
+  <app-register *ngIf="!isLoginDisplayed" (changeDisplay)="changeDisplay($event)"></app-register>
+</div>
