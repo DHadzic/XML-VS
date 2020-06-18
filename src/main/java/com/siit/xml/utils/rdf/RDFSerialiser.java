@@ -4,20 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.update.UpdateExecutionFactory;
-import org.apache.jena.update.UpdateFactory;
-import org.apache.jena.update.UpdateProcessor;
-import org.apache.jena.update.UpdateRequest;
-
 
 public class RDFSerialiser {
 
@@ -39,109 +33,134 @@ public class RDFSerialiser {
 		return fields.size() > 0 ? fields.get(0) : null;
 	}
 
+	String getTypeUri(Class<?> type) {
+		RDFSerializable metaData= type.getAnnotation(RDFSerializable.class);
+		if(metaData.TypeUri().equals("")) {
+			return type.getSimpleName();
+		}
+		return metaData.TypeUri();
+	}
 	public void saveFuseki(Object fusekiObject) throws IllegalArgumentException, IllegalAccessException {
 		Class<?> clazz = fusekiObject.getClass();
 		if (!clazz.isAnnotationPresent(RDFSerializable.class)) {
 			String error = "The class " + clazz.getSimpleName() + " is not annotated with RDFSerializable";
+			System.err.println(error);
 			return;
 		}
 
 		Model model = ModelFactory.createDefaultModel();
 		model.setNsPrefix("pred", PRED_URL);
+		
+		insertObjectIntoModel(model, fusekiObject);
+		
 
-		Resource root = getResource(model, fusekiObject);
-		addLiteralStatements(model, root, fusekiObject);
-		
-		
-		
-		for (Field field : getFieldsAnotatedWith(clazz, RDFProperty.class)) {
-			Property property = getProperty(model, field);
-			field.setAccessible(true);
-			Resource resource = getResource(model, field.get(fusekiObject));
-			if(resource==null){
-				continue;
-			}
-			Statement statement = model.createStatement(root, property, resource);
-			model.add(statement);
-
-		}
-		
-		
-		
-		for (Field field : getFieldsAnotatedWith(clazz, RDFListProperty.class)) {
-			RDFListProperty listProp = field.getAnnotation(RDFListProperty.class);
-			Property property = getProperty(model, listProp.Predicate());
-			field.setAccessible(true);
-			//Class<?> valueType = listProp.ValueType();
-			if(field.get(fusekiObject) ==null) {
-				continue;
-			}
-			@SuppressWarnings("unchecked")
-			List<Object> objects = (List<Object>) field.get(fusekiObject);
-			
-			for(Object inListObject : objects) {
-				
-				Resource resource = getResource(model, inListObject);
-				Statement statement = model.createStatement(root, property, resource);
-				model.add(statement);
-			}	
-
-		}
-		
-		
-		
-//		System.out.println("[INFO] Rendering the UPDATE model as RDF/XML...");
-//		model.write(System.out, "RDF/XML");
-//		
+		model.write(System.out, SparqlUtil.NTRIPLES);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		model.write(out, SparqlUtil.NTRIPLES);
-		SparqlUtil.insertData(clazz.getSimpleName(), new String(out.toByteArray()));
-		
-		
-		
 
+		RDFSerializable rdfSerializable = clazz.getAnnotation(RDFSerializable.class);
+		SparqlUtil.insertData(rdfSerializable.GraphUri(), getUri(fusekiObject), new String(out.toByteArray()));
+	}
+	
+	private Resource insertObjectIntoModel(Model model, Object object) throws IllegalArgumentException, IllegalAccessException {
+		Resource root = getResource(model, object);
+		
+		addLiteralStatements(model, root, object);
+		addPropertyStatments(model, root, object);
+		return root;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addPropertyStatments(Model model, Resource root, Object fusekiObject)
+			throws IllegalArgumentException, IllegalAccessException {
+		for (Field field : getFieldsAnotatedWith(fusekiObject.getClass(), RDFProperty.class)) {
+			field.setAccessible(true);
+			if (field.get(fusekiObject) == null) {
+				continue;
+			}
+			Property predicate = getProperty(model, field);
+			List<Object> objects;
+			if (field.get(fusekiObject) instanceof List<?>) {
+				objects = (List<Object>) field.get(fusekiObject);
+			} else {
+				objects = new ArrayList<>();
+				objects.add(field.get(fusekiObject));
+			}
+
+			if (field.getAnnotation(RDFReferanceType.class) != null) {
+				Class<?> referencedClass = field.getAnnotation(RDFReferanceType.class).getType();
+				for (Object inListObject : objects) {
+					Resource resource = getReferencedResource(model, referencedClass, inListObject.toString());
+					Statement statement = model.createStatement(root, predicate, resource);
+					model.add(statement);
+				}
+
+			} else {
+				for (Object inListObject : objects) {
+					
+					Resource objectRoot = insertObjectIntoModel(model, inListObject);
+					Statement statement = model.createStatement(root, predicate, objectRoot);
+					model.add(statement);
+				}
+			}
+		}
 	}
 
 	Property getProperty(Model model, Field field) {
-		return model.createProperty(PRED_URL, field.getName());
-	}
-
-	Property getProperty(Model model, String pred) {
-		return model.createProperty(PRED_URL, pred);
-	}
-
-	void addLiteralStatements(Model model, Resource root, Object object)
-			throws IllegalArgumentException, IllegalAccessException {
-		Class<?> clazz = object.getClass();
-		for (Field field : getFieldsAnotatedWith(clazz, RDFLiteral.class)) {
-			Property property = getProperty(model, field);
-			field.setAccessible(true);
-			model.add(model.createStatement(root, property, field.get(object).toString()));
+		RDFProperty anotation = field.getAnnotation(RDFProperty.class);
+		String predicate = "";
+		if (anotation != null) {
+			predicate = anotation.Predicate();
+		} else {
+			predicate = field.getAnnotation(RDFLiteral.class).Predicate();
 		}
-
+		if (predicate.equals("")) {
+			predicate = field.getName();
+		}
+		return model.createProperty(PRED_URL, predicate);
 	}
 
-	String getUri(Object object) throws IllegalArgumentException, IllegalAccessException {
-		Class<?> clazz = object.getClass();
-		Field uriField = getFirstFieldAnotatedWith(clazz, RDFID.class);
-		if (uriField == null)
-			return null;
-		uriField.setAccessible(true);
-		return URLBASE + clazz.getSimpleName() + "/" + uriField.get(object).toString();
+	Resource getReferencedResource(Model model, Class<?> referencedClass, String id)
+			throws IllegalArgumentException, IllegalAccessException {
+
+		return model.createResource(URLBASE + getTypeUri(referencedClass) + "/" + id);
 	}
 
 	Resource getResource(Model model, Object object) throws IllegalArgumentException, IllegalAccessException {
 		if (object == null) {
 			return null;
 		}
-		String resourceUri = getUri(object);
-		if (resourceUri != null) {
-			return model.createResource(resourceUri);
-		}
-		Resource resource;
-		resource = model.createResource();
-		addLiteralStatements(model, resource, object);
-		return resource;
+		return model.createResource(getUri(object));
 	}
 
+	String getUri(Object object) throws IllegalArgumentException, IllegalAccessException {
+		if (object == null) {
+			return null;
+		}
+		Class<?> clazz = object.getClass();
+		Field uriField = getFirstFieldAnotatedWith(clazz, RDFID.class);
+		uriField.setAccessible(true);
+		return URLBASE + getTypeUri(clazz) + "/" + uriField.get(object).toString();
+	}
+
+	void addLiteralStatements(Model model, Resource root, Object object)
+			throws IllegalArgumentException, IllegalAccessException {
+		Class<?> clazz = object.getClass();
+		for (Field field : getFieldsAnotatedWith(clazz, RDFLiteral.class)) {
+			field.setAccessible(true);
+			if(field.get(object)==null)
+				continue;
+			List<Object> objects;
+			if (field.get(object) instanceof Collection<?>) {
+				objects = (List<Object>) field.get(object);
+			} else {
+				objects = new ArrayList<>();
+				objects.add(field.get(object));
+			}
+			Property property = getProperty(model, field);
+			for (Object inListObject : objects) {
+				model.add(model.createStatement(root, property, inListObject.toString()));
+			}
+		}
+	}
 }
