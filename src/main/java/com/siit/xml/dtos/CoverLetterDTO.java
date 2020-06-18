@@ -8,7 +8,6 @@ public class CoverLetterDTO {
 	private String content;
 	private List<AuthorDTO> authorData;
 	private String paperId;
-	private String paperTitle;
 	private String manuscriptTitle;
 	
 	public String getContent() {
@@ -28,12 +27,6 @@ public class CoverLetterDTO {
 	}
 	public void setPaperId(String paperId) {
 		this.paperId = paperId;
-	}
-	public String getPaperTitle() {
-		return paperTitle;
-	}
-	public void setPaperTitle(String paperTitle) {
-		this.paperTitle = paperTitle;
 	}
 	public String getManuscriptTitle() {
 		return manuscriptTitle;

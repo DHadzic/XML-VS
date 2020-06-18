@@ -1,3 +1,4 @@
+
 package com.siit.xml.dtos;
 
 public class AuthorDTO {
@@ -30,7 +31,4 @@ public class AuthorDTO {
 	public void setAuthorsAddress(String authorsAddress) {
 		this.authorsAddress = authorsAddress;
 	}
-	
-	
-
 }

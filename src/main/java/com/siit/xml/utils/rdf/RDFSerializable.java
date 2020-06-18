@@ -12,3 +12,4 @@ public @interface RDFSerializable {
 	public String GraphUri() default "Publications";
 	public String TypeUri() default "";
 }
+

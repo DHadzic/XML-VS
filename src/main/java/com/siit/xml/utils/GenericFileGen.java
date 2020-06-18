@@ -20,7 +20,10 @@ public class GenericFileGen {
 	public static String PDF_LOCATION = "generated/variable.pdf";
 	public static final Map<String,String> xslPathMap = new HashMap<String,String>() {{
 		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/User.xsl");
-		put("com.siit.xml.modelUser.User","src/main/resources/data/xsl/CoverLetter.xsl");
+		put("com.siit.xml.modelCoverLetter.CoverLetter","src/main/resources/data/xsl/CoverLetter.xsl");
+		put("com.siit.xml.modelReview.Review","src/main/resources/data/xsl/Review.xsl");
+		put("com.siit.xml.modelReviews.Reviews","src/main/resources/data/xsl/Reviews.xsl");
+		put("com.siit.xml.model.publication.TPublication", "src/main/resources/data/xsl/Publication.xsl");
 	}};
 	
 	
@@ -33,6 +36,7 @@ public class GenericFileGen {
     	String className = getClassName(writeValue);
     	String modelPath = MyGenericDatabase.jaxbPathMap.get(className);
     	String schemaPath = MyGenericDatabase.schemaPathMap.get(className);
+    	
     	
     	try {
 	        JAXBContext context = JAXBContext.newInstance(modelPath);
@@ -73,7 +77,7 @@ public class GenericFileGen {
 		String XSL_LOCATION = xslPathMap.get(getClassName(writeValue));
 		try {
 			pdfTransformer.generateHTML(XML_LOCATION, XSL_LOCATION);
-			pdfTransformer.generatePDF(PDF_LOCATION);		
+			pdfTransformer.generatePDF(PDF_LOCATION);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

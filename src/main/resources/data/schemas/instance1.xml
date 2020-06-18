@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<t:SciencePaper xmlns:t="http://foo.bar"
+ xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://foo.bar file:/D:/5.godina-Master/xml%20projekat/XML-VS/src/main/resources/data/schemas/Publication.xsd" publicationId="1" created="2006-05-04">
+    <t:basicInformations>
+        <t:title>title0</t:title>
+        <t:authors>
+            <t:username>username0</t:username>
+            <t:authorInstitution>authorInstitution0</t:authorInstitution>
+        </t:authors>
+        <t:authors>
+            <t:username>username1</t:username>
+            <t:authorInstitution>authorInstitution1</t:authorInstitution>
+        </t:authors>
+    </t:basicInformations>
+    <t:paragraph>
+        <t:paragraphTitle>paragraphTitle0</t:paragraphTitle>
+        <t:element>
+            <t:text>text0</t:text>
+        </t:element>
+        <t:element>
+            <t:citation id="0">
+                <t:authorName>authorName0</t:authorName>
+                <t:authorName>authorName1</t:authorName>
+                <t:year>50</t:year>
+                <t:text>text1</t:text>
+            </t:citation>
+        </t:element>
+        <t:element>
+            <t:citation id="1">
+                <t:authorName>authorName0</t:authorName>
+                <t:authorName>authorName1</t:authorName>
+                <t:year>50</t:year>
+                <t:text>text1</t:text>
+            </t:citation>
+        </t:element>
+    </t:paragraph>
+    <t:paragraph>
+        <t:paragraphTitle>paragraphTitle1</t:paragraphTitle>
+        <t:element>
+            <t:text>text2</t:text>
+        </t:element>
+        <t:element>
+            <t:text>text3</t:text>
+        </t:element>
+    </t:paragraph>
+    <t:reference citationId="0">
+        <t:authorName>authorName2</t:authorName>
+        <t:authorName>authorName3</t:authorName>
+        <t:paperTitle>paperTitle0</t:paperTitle>
+        <t:year>50</t:year>
+    </t:reference>
+    <t:reference citationId="1">
+        <t:authorName>authorName4</t:authorName>
+        <t:authorName>authorName5</t:authorName>
+        <t:paperTitle>paperTitle1</t:paperTitle>
+        <t:year>50</t:year>
+    </t:reference>
+</t:SciencePaper>

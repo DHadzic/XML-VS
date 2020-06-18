@@ -51,11 +51,12 @@ public class CoverLetterController {
 		return new ResponseEntity<String>(clService.saveXML(xmlFile),HttpStatus.OK);
     }
 	
+	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
     @RequestMapping(
     		value = "/save",
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity register(@RequestBody CoverLetterDTO coverLetter) {
+    public ResponseEntity save(@RequestBody CoverLetterDTO coverLetter) {
     	return new ResponseEntity<String>(clService.saveCoverLetter(coverLetter),HttpStatus.OK);
     }
 
@@ -68,7 +69,6 @@ public class CoverLetterController {
 	//@ResponseBody
     public FileSystemResource getFile(@RequestBody FileGenDTO data, HttpServletResponse response) {
 		response.setContentType("application/octet-stream");
-		response.setHeader("Content-disposition", "attachment; filename=user.xml");
 		File f = clService.getFile(data);
 		if(f == null) {
 			return null;

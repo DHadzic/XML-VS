@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itextpdf.text.log.SysoCounter;
 import com.siit.xml.modelUser.User;
 import com.siit.xml.repository.UserRepository;
 
@@ -24,6 +25,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
+        System.out.println(user);
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_AUTHOR"));
         if(user.getRole().toString().equals("ROLE_REVIEWER")) {

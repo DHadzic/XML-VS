@@ -5,11 +5,11 @@
     <xs:element name="CoverLetter">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" name="AuthorData"/>
-                <xs:element name="Content"/>
+                <xs:element maxOccurs="unbounded" name="AuthorData" type="u:AuthorData"/>
+                <xs:element name="Content" type="xs:string"/>
             </xs:sequence>
-            <xs:attribute name="paperId" type="xs:string"/>
-            <xs:attribute name="paperTitle" type="xs:string"/>
+            <xs:attribute name="paperId" type="xs:string" use="required"/>
+            <xs:attribute name="paperTitle" type="xs:string" use="required"/>
             <xs:attribute name="commitDate" type="xs:date"/>
             <xs:attribute name="manuscriptTitle" type="xs:string"/>
         </xs:complexType>

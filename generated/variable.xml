@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<user xmlns="http://localhost:8080/User" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="C:\Users\Damir\Desktop\xml_naucniradovi\xml\target\classes\data\schemas\User.xsd">
-    <username>UserE</username>
-    <password>$2a$10$kNkqTvDtJvv56QZmAek.9uLG7rphzBX2/2gfITAy2tXpsRoZRY9qS</password>
-    <fullName>full name</fullName>
-    <email>eamil@adress.com</email>
-    <role>ROLE_EDITOR</role>
-</user>

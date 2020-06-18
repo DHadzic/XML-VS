@@ -9,6 +9,7 @@ import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.dtos.FileType;
 import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.modelCoverLetter.CoverLetter;
+import com.siit.xml.modelReview.Review;
 import com.siit.xml.modelUser.User;
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
@@ -23,11 +24,12 @@ public class CoverLetterRepository {
 	@Autowired
 	GenericFileGen fileGenerator;
 
-	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(String xmlData) {
 		
 		CoverLetter coverLetter = db.getClassFromXML(new CoverLetter(), xmlData);
-
+		
+		if(coverLetter == null) { return "Bad input data"; }
+		/*
 		try {
 			if(db.getResourceById(new TPublication(), coverLetter.getPaperId()) == null) {
 				return "Invalid paper id";
@@ -35,23 +37,28 @@ public class CoverLetterRepository {
 		} catch (Exception e) {
 			return "Invalid paper id";
 			//e.printStackTrace();
+		}*/
+
+		if(!db.validateClassAgainstSchema(coverLetter)){
+			return "Bad input data";
 		}
 
 		String id;
 		try {
-			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			id = new Integer(db.countResources(new CoverLetter())).toString();
 			db.saveResourse(coverLetter, id);
 		} catch (Exception e) {
 			return "Something went wrong";
 			//e.printStackTrace();
 		}
-		return "Succesful";
+		return "Successful";
 	}
 
-	// Promeniti na CoverLetter kad se odradi model
 	public String saveXML(File xmlData) {
 		CoverLetter coverLetter = db.getClassFromXML(new CoverLetter(), xmlData);
 
+		if(coverLetter == null) { return "Bad input data"; }
+		/*
 		try {
 			if(db.getResourceById(new TPublication(), coverLetter.getPaperId()) == null) {
 				return "Invalid paper id";
@@ -59,34 +66,36 @@ public class CoverLetterRepository {
 		} catch (Exception e) {
 			return "Invalid paper id";
 			//e.printStackTrace();
+		}*/
+
+		if(!db.validateClassAgainstSchema(coverLetter)){
+			return "Bad input data";
 		}
 
 		String id;
 		try {
-			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			id = new Integer(db.countResources(new CoverLetter())).toString();
 			db.saveResourse(coverLetter, id);
 		} catch (Exception e) {
 			return "Something went wrong";
 			//e.printStackTrace();
 		}
 		
-		return "Succesful";
+		return "Successful";
 	}
 	
 	public String save(CoverLetter coverLetter) {
 		
-		try {
-			if(db.getResourceById(new TPublication(), coverLetter.getPaperId()) == null) {
-				return "Invalid paper id";
-			}
-		} catch (Exception e) {
-			return "Invalid paper id";
-			//e.printStackTrace();
+		
+		coverLetter.setPaperTitle("Title");
+		
+		if(!db.validateClassAgainstSchema(coverLetter)){
+			return "Bad input data";
 		}
 		
 		String id;
 		try {
-			id = new Integer(db.getByXPath(new CoverLetter(), "//CoverLetter").size() + 1).toString();
+			id = new Integer(db.countResources(new CoverLetter())).toString();
 			db.saveResourse(coverLetter, id);
 		} catch (Exception e) {
 			return "Something went wrong";
@@ -97,10 +106,10 @@ public class CoverLetterRepository {
 	}
 	
 	public File getFile(FileGenDTO data) {
-		User user;
+		CoverLetter coverLetter;
 
 		try {
-			if( (user = db.getResourceById(new User(), data.getId())) == null){
+			if( (coverLetter = db.getResourceById(new CoverLetter(), data.getId())) == null){
 				return null;
 			}
 		} catch (Exception e) {
@@ -109,16 +118,31 @@ public class CoverLetterRepository {
 		}
 		
 		if(data.getType() == FileType.XML) {
-			fileGenerator.generateXMLFile(user);
+			fileGenerator.generateXMLFile(coverLetter);
 			return new File(GenericFileGen.XML_LOCATION);
 		}else if (data.getType() == FileType.HTML){
-			fileGenerator.generateHTMLFile(user);
+			fileGenerator.generateHTMLFile(coverLetter);
 			return new File(PDFTransformer.HTML_FILE);
 		}else if (data.getType() == FileType.PDF){
-			fileGenerator.generatePDFFile(user);
+			fileGenerator.generatePDFFile(coverLetter);
 			return new File(GenericFileGen.PDF_LOCATION);
 		}
 		
 		return null;
 	}
+	
+	private boolean checkReferences(CoverLetter coverLetter) {
+		try {
+			TPublication pub = null;
+			if( (pub = db.getResourceById(new TPublication(), coverLetter.getPaperId())) == null) {
+				return false;
+			}
+			coverLetter.setPaperTitle(pub.getBasicInformations().getTitle().toString());
+		} catch (Exception e) {
+			return false;
+			//e.printStackTrace();
+		}
+		return true;
+	}
+	
 }

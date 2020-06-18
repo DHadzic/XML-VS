@@ -11,5 +11,3 @@ public @interface RDFLiteral {
 	public String Predicate() default "";
 	
 }
-
-	

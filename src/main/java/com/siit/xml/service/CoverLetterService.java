@@ -50,12 +50,13 @@ public class CoverLetterService {
 		AuthorData auth = null;
 		for (AuthorDTO author : coverLetterDTO.getAuthorData()) {
 			auth = new AuthorData();
-			auth.setAuthorsName(author.getAuthorsName());
-			auth.setAuthorsEmail(author.getAuthorsEmail());
+			if(author.getAuthorsName() != null ) auth.setAuthorsName(author.getAuthorsName());
+			if(author.getAuthorsEmail() != null ) auth.setAuthorsEmail(author.getAuthorsEmail());
 			if(author.getAuthorsPhone() != null ) auth.setAuthorsPhone(author.getAuthorsPhone());
 			if(author.getAuthorsAddress() != null ) auth.setAuthorsAddress(author.getAuthorsAddress());
 			coverLetter.getAuthorData().add(auth);
 		}
+		
 		return clRep.save(coverLetter);
 	}
 

@@ -15,41 +15,6 @@ import com.siit.xml.utils.rdf.SparqlUtil;
 public class XmlApplication {
 
 	public static void main(String[] args) {
-		// SpringApplication.run(XmlApplication.class, args);
-		try {
-			test();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		SpringApplication.run(XmlApplication.class, args);
 	}
-
-	static void test() throws IllegalArgumentException, IllegalAccessException {
-		RDFSerialiser ser = new RDFSerialiser();
-		User user = new User();
-		user.setEmail("GLAVNI");
-		user.setFullName("j a");
-		user.setUsername("carina");
-		ser.saveFuseki(user);
-		user.users=new ArrayList<>();
-		
-		for (int i = 0; i < 10; i++) {
-			User user1 = new User();
-			user1.setEmail("email1"+i);
-			user1.setFullName("FN1"+i);
-			user1.setUsername(""+i);
-			user.users.add(user1);
-			ser.saveFuseki(user1);
-		}
-
-		
-			ser.saveFuseki(user);
-			SparqlUtil.selectData(User.class.getSimpleName(), "?s ?p ?o");
-
-	}
-
 }
