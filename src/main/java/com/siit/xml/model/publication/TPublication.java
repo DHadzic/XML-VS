@@ -22,6 +22,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.siit.xml.utils.rdf.RDFID;
 import com.siit.xml.utils.rdf.RDFLiteral;
+import com.siit.xml.utils.rdf.RDFProperty;
 import com.siit.xml.utils.rdf.RDFSerializable;
 
 
@@ -66,17 +67,19 @@ import com.siit.xml.utils.rdf.RDFSerializable;
     "paragraph",
     "reference"
 })
-@RDFSerializable
+@RDFSerializable(TypeUri = "SciencePaper")
 @XmlRootElement(name="SciencePaper")
 public class TPublication {
 
     @XmlElement(required = true)
+    @RDFProperty(Predicate = "info")
     protected TBasicInformation basicInformations;
     @XmlElement(required = true)
     protected List<TParagraph> paragraph;
     @XmlElement(required = true)
     protected List<TReference> reference;
     @XmlAttribute(name = "language")
+    @RDFLiteral
     protected String language;
     @RDFID
     @XmlAttribute(name = "publicationId", required = true)
@@ -86,6 +89,7 @@ public class TPublication {
     protected String status;
     @XmlAttribute(name = "created", required = true)
     @XmlSchemaType(name = "date")
+    @RDFLiteral(Predicate = "created")
     protected XMLGregorianCalendar created;
 
     /**

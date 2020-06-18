@@ -31,7 +31,7 @@ public class SparqlUtil {
 	private static final String MY_SELECT = 
 			"SELECT DISTINCT ?publication FROM <%1$s%2$s> WHERE\r\n" + 
 			"{ \r\n" + 
-			"    ?publication <http://siit.xml/predicates/basicInfo> ?basicInfo .\r\n" + 
+			"    ?publication <http://siit.xml/predicates/info> ?basicInfo .\r\n" + 
 			"    ?publication <http://siit.xml/predicates/status> ?status .\r\n" + 
 			"    ?basicInfo <http://siit.xml/predicates/author> ?author .\r\n" + 
 			"    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .\r\n" + 

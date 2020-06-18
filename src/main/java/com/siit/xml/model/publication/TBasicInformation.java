@@ -18,8 +18,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-import com.siit.xml.utils.rdf.RDFListProperty;
+import com.siit.xml.utils.rdf.RDFID;
 import com.siit.xml.utils.rdf.RDFLiteral;
+import com.siit.xml.utils.rdf.RDFProperty;
 import com.siit.xml.utils.rdf.RDFSerializable;
 
 
@@ -60,16 +61,17 @@ import com.siit.xml.utils.rdf.RDFSerializable;
     "reviewers",
     "keywords"
 })
-@RDFSerializable
+@RDFSerializable(TypeUri = "basicInfo")
 public class TBasicInformation {
-	@RDFLiteral
+	@RDFID
     @XmlElement(required = true)
     protected TBasicInformation.Title title;
-	@RDFListProperty(Predicate="author", ValueType=TAuthor.class)
+	@RDFProperty(Predicate = "author")
     @XmlElement(required = true)
     protected List<TAuthor> authors;
+	@RDFProperty(Predicate = "reviewer")
     protected List<TReviewer> reviewers;
-    @RDFListProperty(Predicate="keyword", ValueType = String.class)
+    @RDFLiteral(Predicate="keyword")
     protected List<String> keywords;
 
     /**
@@ -262,7 +264,11 @@ public class TBasicInformation {
         public void setProperty(String value) {
             this.property = value;
         }
-
+        
+        @Override
+        public String toString() {
+        	return value;
+        }
     }
 
 }
