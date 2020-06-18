@@ -117,7 +117,14 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+<dependency>
+    <groupId>org.exist-db</groupId>
+    <artifactId>exist-core</artifactId>
+    <version>5.2.0</version>
+</dependency>
+        
 	</dependencies>
+	
 
 	<build>
 		<plugins>

@@ -18,19 +18,28 @@ public class SparqlUtil {
 	/* Removes all of the triples from a named graphed */
 	private static final String DROP_GRAPH_TEMPLATE = "DROP GRAPH <%s>";
 
-	/**
-	 * A template for creating SPARUL (SPARQL Update) query can be found here:
-	 * https://www.w3.org/TR/sparql11-update/
-	 */
 	/* Insert RDF data into the default graph */
 	private static final String UPDATE_TEMPLATE = "INSERT DATA { %s }";
 	
 	/* Insert RDF data to an arbitrary named graph */
-	private static final String UPDATE_TEMPLATE_NAMED_GRAPH = "INSERT DATA { GRAPH <%1$s%2$s> { %3$s } }";
+	private static final String UPDATE_TEMPLATE_NAMED_GRAPH = "WITH <%1$s%2$s> DELETE {?s ?p ?o} WHERE { <%3$s> ?p ?o. ?s ?p ?o };"
+			+ " INSERT DATA { GRAPH <%1$s%2$s> { %4$s } }"; //1.DATA_URI 2.GRAPH_NAME 3.ENTITY_ID 4.NTRIPLES
 	
-
 	/* Simple SPARQL query on a named graph */
 	private static final String SELECT_NAMED_GRAPH_TEMPLATE = "SELECT * FROM <%1$s%2$s> WHERE { %3$s }";
+	
+	private static final String MY_SELECT = 
+			"SELECT DISTINCT ?publication FROM <%1$s%2$s> WHERE\r\n" + 
+			"{ \r\n" + 
+			"    ?publication <http://siit.xml/predicates/basicInfo> ?basicInfo .\r\n" + 
+			"    ?publication <http://siit.xml/predicates/status> ?status .\r\n" + 
+			"    ?basicInfo <http://siit.xml/predicates/author> ?author .\r\n" + 
+			"    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .\r\n" + 
+			"  	 ?basicInfo <http://siit.xml/predicates/reviewer> ?reviewer .\r\n" + 
+			"  	 ?author <http://siit.xml/predicates/authorInstitution> ?authorInstitution .\r\n" + 
+			"    FILTER(%3$s)\r\n" + 
+			"}";
+
 	
 	/* Plain text RDF serialization format */
 	public static final String NTRIPLES = "N-TRIPLES";
@@ -55,30 +64,39 @@ public class SparqlUtil {
 		return String.format(UPDATE_TEMPLATE, ntriples);
 	}
 	
-	public static void insertData(String EntityUri, String ntriples) {
-		String sparqlUpdate = String.format(UPDATE_TEMPLATE_NAMED_GRAPH, DATA_URI, EntityUri, ntriples);
+	public static void insertData(String graphName, String EntityIDUri, String ntriples) {
+		String sparqlUpdate = String.format(UPDATE_TEMPLATE_NAMED_GRAPH, DATA_URI, graphName, EntityIDUri, ntriples);
 		System.out.println(sparqlUpdate);
-		
-		// UpdateRequest represents a unit of execution
 		UpdateRequest update = UpdateFactory.create(sparqlUpdate);
 
-		// UpdateProcessor sends update request to a remote SPARQL update service. 
         UpdateProcessor processor = UpdateExecutionFactory.createRemote(update, UPDATE_URI);
 		processor.execute();
-		
-		
-		
-		
 	}
 	
-	public static void selectData(String EntityUri, String sparqlCondition) {
-		System.out.println("[INFO] Making sure the changes were made in the named graph \"" + UPDATE_URI + "\".");
-		String sparqlQuery = String.format(SELECT_NAMED_GRAPH_TEMPLATE, DATA_URI, EntityUri, sparqlCondition);
-		QueryExecution query = QueryExecutionFactory.sparqlService(QUERY_URI, sparqlQuery);
+	public static void selectData(String graphName, String sparqlCondition) {
+		String sparqlQuery = String.format(MY_SELECT, DATA_URI, graphName, sparqlCondition);
 		System.out.println(sparqlQuery);
-		// Query the collection, dump output response with the use of ResultSetFormatter
+		QueryExecution query = QueryExecutionFactory.sparqlService(QUERY_URI, sparqlQuery);
 		ResultSet results = query.execSelect();
-		ResultSetFormatter.out(System.out, results);
+		while(results.hasNext()) {
+			System.out.println(results.next().get("publication").toString());
+		}
+
 	}
 
 }
+
+//SELECT DISTINCT ?publication FROM <http://localhost:8080/fuseki/PersonDataset/data/MainGraph> WHERE
+//{ 
+//  {
+//    ?publication <http://siit.xml/predicates/BasicInfo> ?basicInfo .
+//    ?publication <http://siit.xml/predicates/Status> ?status .
+//    ?basicInfo <http://siit.xml/predicates/author> ?author .
+//    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .
+//  	?author <http://siit.xml/predicates/authorInstituion> ?authorInstitution .
+//    FILTER(?author = ?biloSta || ?author = "Pera" )
+//  }
+//  {
+//    
+//  }
+//}
