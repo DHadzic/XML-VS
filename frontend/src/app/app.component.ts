@@ -29,6 +29,21 @@ export class AppComponent {
       this.router.navigate(['/login']);
     }
 
+    loggedAuthor(){
+      var roles = this.authService.getRoles();
+      return roles.includes("ROLE_AUTHOR");
+    }
+
+    loggedEditor(){
+      var roles = this.authService.getRoles();
+      return roles.includes("ROLE_EDITOR");
+    }
+
+    loggedReviewer(){
+      var roles = this.authService.getRoles();
+      return roles.includes("ROLE_REVIEWER");
+    }
+
     navigateTo(url){
       this.router.navigate['/' + url];
     }

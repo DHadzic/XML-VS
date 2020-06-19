@@ -86,6 +86,10 @@ public class ReviewService {
 	public String approveReview(String id) {
 		return reviewRep.approveReview(id);
 	}
+
+	public String deleteReview(String id) {
+		return reviewRep.deleteReview(id);
+	}
 	
 	public List<ReviewRequest> getMyRequests(String username){
 		return reviewRep.getMyRequests(username);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<reviews xmlns="http://localhost:8080/Reviews" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="C:\Users\Damir\Desktop\xml_naucniradovi\xml\target\classes\data\schemas\Reviews.xsd">
+    <reviews reviewedBy="reviewer" paperId="1">
+        <authors>
+            <username>UserE</username>
+        </authors>
+        <comment>My comment1</comment>
+        <rateSubject>4</rateSubject>
+        <rateReadability>4</rateReadability>
+        <rateOriginality>4</rateOriginality>
+    </reviews>
+    <reviews reviewedBy="reviewer" paperId="1">
+        <authors>
+            <username>UserE</username>
+        </authors>
+        <comment>My comment2</comment>
+        <rateSubject>3</rateSubject>
+        <rateReadability>3</rateReadability>
+        <rateOriginality>3</rateOriginality>
+    </reviews>
+    <reviews reviewedBy="reviewer" paperId="1">
+        <authors>
+            <username>UserE</username>
+        </authors>
+        <comment>My comment3</comment>
+        <rateSubject>2</rateSubject>
+        <rateReadability>2</rateReadability>
+        <rateOriginality>2</rateOriginality>
+    </reviews>
+    <reviews reviewedBy="reviewer" paperId="1">
+        <authors>
+            <username>UserE</username>
+        </authors>
+        <comment>Comment3</comment>
+        <rateSubject>3</rateSubject>
+        <rateReadability>3</rateReadability>
+        <rateOriginality>3</rateOriginality>
+    </reviews>
+</reviews>

@@ -94,8 +94,6 @@ public static final Map<String,String> collectionIdMap = new HashMap<String,Stri
     	try {
     		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
 
-    		if(givenClass.endsWith("Review")) entityId = Long.toString(col.getResourceCount());
-
     		resource = (XMLResource) col.createResource(entityId, XMLResource.RESOURCE_TYPE);
         	
         	Marshaller marshaller = getMarshaller(modelPath,schemaPath);
@@ -136,6 +134,9 @@ public static final Map<String,String> collectionIdMap = new HashMap<String,Stri
     	OutputStream os = new ByteArrayOutputStream();
     	
 		col = ConnectUtil.getOrCreateCollection(collectionId, 0, AuthenticationUtilities.loadProperties());
+		for (String key : col.listResources()) {
+			System.out.println(key);
+		}
 		return col.createId();
     }
     

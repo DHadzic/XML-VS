@@ -145,7 +145,16 @@ public class ReviewController {
     public ResponseEntity approveReview(@PathVariable String id) {
     	return new ResponseEntity<String>(reviewService.approveReview(id),HttpStatus.OK);
     }
-	
+
+	@PreAuthorize("hasAuthority('ROLE_EDITOR')")
+    @RequestMapping(
+    		value = "/deleteReview/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteReview(@PathVariable String id) {
+    	return new ResponseEntity<String>(reviewService.deleteReview(id),HttpStatus.OK);
+    }
+
 	@PreAuthorize("hasAuthority('ROLE_REVIEWER')")
     @RequestMapping(
     		value = "/getRequests",

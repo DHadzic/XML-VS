@@ -21,7 +21,7 @@ public class XmlApplication {
 
 	public static void main(String[] args) {
 
-		testSparql();
+		//testSparql();
 		SpringApplication.run(XmlApplication.class, args);
 	}
 

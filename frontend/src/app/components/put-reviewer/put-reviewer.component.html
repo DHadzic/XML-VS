@@ -5,7 +5,7 @@
     </select>
   </div>
   <div class="col-4">
-      <select class="form-control" [(ngModel)]="selected_reviewer" (change)="dataChange()">
+      <select class="form-control" [(ngModel)]="selected_reviewer">
         <option *ngFor="let reviewer of reviewers" [ngValue]="reviewer" >{{reviewer}}</option>
       </select>
   </div>

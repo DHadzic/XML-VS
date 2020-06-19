@@ -1,0 +1,21 @@
+<div *ngFor="let review of reviews">
+  <div class="form-group">
+    <div class="form-group">
+      <label for="rate_subject"><b>Review by:      {{review.review.authors.username[0]}}</b></label>
+    </div>
+    <div class="form-group">
+      <label for="rate_subject"><b>Comment:        {{review.review.comment}}</b></label>
+    </div>
+    <div class="form-group">
+      <label for="rate_subject"><b>Subject rate:   {{review.review.rateSubject}}</b></label>
+    </div>
+    <div class="form-group">
+      <label for="rate_subject"><b>Readability rate:   {{review.review.rateReadability}}</b></label>
+    </div><div class="form-group">
+      <label for="rate_subject"><b>Originality rate:   {{review.review.rateOriginality}}</b></label>
+    </div>
+    <div class="form-group">
+      <button type="button" class="btn btn btn-success" (click)="acceptReview(review.id)">Accept</button>
+    </div>
+  </div>
+</div>

@@ -208,6 +208,19 @@ public class ReviewRepository {
 		return "Successful";
 	}
 	
+	public String deleteReview(String id) {
+		try {
+			Review review = db.getResourceById(new Review(), id);
+			if(review != null) {
+				db.deleteResource(review, id);
+			}
+		} catch (Exception e) {
+			return "Invalid id";
+		}
+		return "Successful";
+	}
+
+	
 	public List<ReviewRequest> getMyRequests(String username){
 		String xpath = "/reviewRequest[reviewerUsername=\"" + username +"\"]";
 		try {

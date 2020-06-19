@@ -21,7 +21,10 @@ export class PutReviewerComponent implements OnInit {
 
     userService.getReviewingPublications().subscribe(
       data => {
-        this.science_papers = JSON.parse(data as string);
+        var recieved = JSON.parse(data as string);
+        for(let paper of recieved){
+          this.science_papers.push(paper.value.publicationId + "-" + paper.value.basicInformations.title.value)
+        }
         }
     )
     userService.getReviewers().subscribe(
@@ -31,10 +34,15 @@ export class PutReviewerComponent implements OnInit {
     )
   }
 
-  createRequest(){
-    console.log(this.selected_paper);
+  assignReviewer(){
     console.log(this.selected_reviewer);
-    this.reviewService.createReviewRequest(this.selected_paper,this.selected_reviewer);
+    var selected_paper_cut = this.selected_paper.split("-")[0];
+    console.log(selected_paper_cut);
+    this.reviewService.createReviewRequest(selected_paper_cut,this.selected_reviewer).subscribe(
+      data=>{
+        alert(data);
+      }
+    )
   }
 
   ngOnInit() {

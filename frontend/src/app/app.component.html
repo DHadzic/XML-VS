@@ -5,11 +5,23 @@
   </button>
   <div class="navbar-collapse collapse" id="collapsingNavbar">
       <ul class="navbar-nav">
-          <li class="nav-item active">
-              <a class="nav-link" href="" id="sciencePapers">Science Papers</a>
-          </li>
-      </ul>
-      <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="" id="sciencePapers">Science Papers</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" *ngIf="loggedEditor()" href="assignReviewer" id="assignReviewer">Assign Reviewer</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" *ngIf="loggedReviewer()" href="myRequests" id="myRequests">My Requests</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" *ngIf="loggedAuthor()" href="addReview" id="addReview">Add review</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" *ngIf="loggedEditor()" href="manageReviews" id="manageReviews">Manage reviews</a>
+            </li>
+        </ul>
+    <ul class="navbar-nav ml-auto">
           <li class="nav-item">
               <button *ngIf="loggedIn()" (click)="logout()" class="btn nav-link" id="logout_btn"><b>Logout</b></button>
           </li>

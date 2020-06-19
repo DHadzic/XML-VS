@@ -14,13 +14,39 @@ export class ReviewService {
     var headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
     
     var request = {
-      "paper" : paper,
-      "reviewer" : reviewer
+      "paperId" : paper,
+      "username" : reviewer
     }
 
     var request_json = JSON.stringify(request);
 
     return this.http.put(this.path + "addRequest", request_json, {headers,responseType: 'text'});
+  }
+
+  getMyRevRequests(){
+    return this.http.get(this.path + "getRequests", { responseType: 'text'});
+  }
+
+  declineRequest(requestId){
+    return this.http.put(this.path + "declineRequest/" + requestId, { responseType: 'text'});
+  }
+
+  addReview(review){
+    var headers: HttpHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    var review_json = JSON.stringify(review);
+
+    console.log(review_json);
+
+    return this.http.put(this.path + "save", review_json, {headers,responseType: 'text'});
+  }
+
+  getAuthorReviews(){
+    return this.http.get(this.path + "getAuthorReviews", { responseType: 'text'});
+  }
+
+  acceptReview(reviewId){
+    return this.http.put(this.path + "approveReview/" + reviewId, { responseType: 'text'});
   }
 
 }

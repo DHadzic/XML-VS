@@ -1,0 +1,42 @@
+<div *ngIf="isInputOn()">
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <form role="form" (ngSubmit)="addReview()">
+      <div class="form-group">
+        <label for="comment"><b>Comment</b></label>
+        <input type="text" class="form-control" id="comment" name="comment" [(ngModel)]="review.comment" required />
+      </div>
+      <div class="form-group">
+        <label for="rate_subject"><b>Rate subject</b></label>
+        <select class="form-control" [(ngModel)]="review.rateSubject" name="subject" id="subject">
+            <option *ngFor="let rate of rates" [ngValue]="rate">{{rate}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="rate_subject"><b>Rate readability</b></label>
+        <select class="form-control" [(ngModel)]="review.rateReadability" name="readability" id="readability">
+            <option *ngFor="let rate of rates" [ngValue]="rate">{{rate}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="rate_subject"><b>Rate originality</b></label>
+        <select class="form-control" [(ngModel)]="review.rateOriginality" name="originality" id="originality">
+            <option *ngFor="let rate of rates" [ngValue]="rate">{{rate}}</option>
+        </select>
+      </div>
+      <div class="right_padding">
+        <button type="submit" class="btn btn btn-success" id="register">Send</button>
+      </div>
+      </form></div>
+      <div class="col-md-4"></div>
+    </div>
+</div>
+<div *ngIf="!isInputOn()">
+  <div *ngFor="let request of my_requests" class="form-group">
+    <label for="Type"><b>Request to review paper : {{request.paperId}}</b></label>
+    <button type="button" class="btn btn btn-success" (click)="acceptRequest(request.paperId)">Accept</button>
+    <button type="button" class="btn btn btn-danger" (click)="declineRequest(request.requestId)">Decline</button>
+  </div>
+</div>
+

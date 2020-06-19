@@ -17,8 +17,6 @@ export class AuthGuard implements CanActivate {
     if (this.authenticationService.isLoggedIn()) {
       var allowed_roles = next.data["roles"] as Array<string>;
       var my_roles = this.authenticationService.getRoles();
-      console.log(allowed_roles);
-      console.log(my_roles);
     
       for(var i in my_roles){
         if(allowed_roles.includes(my_roles[i])){

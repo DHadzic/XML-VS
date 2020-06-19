@@ -6,14 +6,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouterModule,Routes } from '@angular/router';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; 
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SciencePapersComponent } from './components/science-papers/science-papers.component';
-import { SetReviewersComponent } from './components/set-reviewers/set-reviewers.component';
 import { LoginGuard } from './services/security/login.guard';
 import { AuthGuard } from './services/security/auth.guard';
 import { PutReviewerComponent } from './components/put-reviewer/put-reviewer.component';
+import { JwtUtilService } from './services/security/jwt-util.service';
+import { TokenInterService } from './services/security/token-inter.service';
+import { MyRequestComponent } from './components/my-request/my-request.component';
+import { AddAuthorReviewComponent } from './components/add-author-review/add-author-review.component';
+import { ManageReviewsComponent } from './components/manage-reviews/manage-reviews.component';
 
 const appRoutes: Routes = [
   { path: 'main', 
@@ -28,9 +32,27 @@ const appRoutes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'setReviewers',
-    component: SetReviewersComponent,
-    data: {roles: ['EDITOR_ROLE']},
+    path: 'assignReviewer',
+    component: PutReviewerComponent,
+    data: {roles: ['ROLE_EDITOR']},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'myRequests',
+    component: MyRequestComponent,
+    data: {roles: ['ROLE_REVIEWER']},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'addReview',
+    component: AddAuthorReviewComponent,
+    data: {roles: ['ROLE_AUTHOR']},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'manageReviews',
+    component: ManageReviewsComponent,
+    data: {roles: ['ROLE_EDITOR']},
     canActivate: [AuthGuard]
   }
 ];
@@ -43,8 +65,10 @@ const appRoutes: Routes = [
     LoginComponent,
     RegisterComponent,
     SciencePapersComponent,
-    SetReviewersComponent,
-    PutReviewerComponent
+    PutReviewerComponent,
+    MyRequestComponent,
+    AddAuthorReviewComponent,
+    ManageReviewsComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +79,15 @@ const appRoutes: Routes = [
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    AuthGuard,
+    JwtUtilService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
