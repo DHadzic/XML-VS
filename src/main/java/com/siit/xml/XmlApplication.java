@@ -20,7 +20,7 @@ import com.siit.xml.utils.rdf.SparqlUtil;
 public class XmlApplication {
 
 	public static void main(String[] args) {
-//		testSparql();
+		testSparql();
 		SpringApplication.run(XmlApplication.class, args);
 	}
 
@@ -43,6 +43,8 @@ public class XmlApplication {
 		info1.getKeywords().add("Keyword1");
 		info1.getKeywords().add("Keyword2");
 		info1.getReviewers().add(reviewer3);
+		info1.setTitle(new Title());
+		info1.getTitle().setValue("title2");
 
 		TPublication pub1 = new TPublication();
 		pub1.setBasicInformations(info1);
