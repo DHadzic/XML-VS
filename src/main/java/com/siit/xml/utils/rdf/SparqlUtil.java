@@ -39,13 +39,14 @@ public class SparqlUtil {
 			 "{\n" + 
 			 "    ?publication <http://siit.xml/predicates/info> ?basicInfo .\n" + 
 			 "    ?publication <http://siit.xml/predicates/status> ?status .\n" + 
+			 "    OPTIONAL{?publication <http://siit.xml/predicates/created> ?dateCreated}\n" + 
 			 "    ?basicInfo <http://siit.xml/predicates/author> ?author .\n" + 
-			 "    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .\n" + 
-			 "    ?basicInfo <http://siit.xml/predicates/reviewer> ?reviewer .\n" + 
+			 "    OPTIONAL {?basicInfo <http://siit.xml/predicates/keyword> ?keyword}\n" + 
+			 "    OPTIONAL {?basicInfo <http://siit.xml/predicates/reviewer> ?reviewer }\n" + 
 			 "    ?author <http://siit.xml/predicates/authorInstitution> ?authorInstitution .\n" + 
 			 "  	FILTER(%3$s)\n" + 
 			 "  }\n" + 
-			 "  FILTER(?author = <http://siit.xml/user/%4$s> || ?status=\"objavljen\")\r\n"+
+			 "  FILTER(?author = <http://siit.xml/user/%4$s> || ?status=\"published\")\r\n"+
 			"}";
 
 	

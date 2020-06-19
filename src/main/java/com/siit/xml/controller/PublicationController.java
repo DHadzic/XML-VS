@@ -175,13 +175,14 @@ public class PublicationController {
 	@RequestMapping(
 			method = RequestMethod.GET,
 			value="/search/metadata",
-			consumes = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.TEXT_PLAIN_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<TPublication>> getPublicationsByMetadata(@RequestBody String query, Principal principal){
 		String username = principal.getName();
 		List<TPublication> rets = new ArrayList<>();
-		for (String publicationID : SparqlUtil.selectData("Publications", query, username)) {
-			rets.add(pService.getById(publicationID));
+		for (String publicationID : SparqlUtil.selectData("Publications", username, query)) {
+			
+			rets.add(pService.getById(publicationID.replace("http://siit.xml/SciencePaper/", "")));
 		}
 		return new ResponseEntity<>(rets, HttpStatus.OK);
 			
