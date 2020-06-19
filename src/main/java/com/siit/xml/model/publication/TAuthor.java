@@ -43,7 +43,7 @@ import com.siit.xml.utils.rdf.RDFSerializable;
     "username",
     "authorInstitution"
 })
-@RDFSerializable
+@RDFSerializable(TypeUri = "user")
 public class TAuthor {
 	@RDFID
     @XmlElement(required = true)

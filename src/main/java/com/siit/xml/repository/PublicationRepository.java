@@ -16,6 +16,7 @@ import com.siit.xml.service.EmailService;
 import com.siit.xml.utils.GenericFileGen;
 import com.siit.xml.utils.MyGenericDatabase;
 import com.siit.xml.utils.PDFTransformer;
+import com.siit.xml.utils.rdf.RDFSerialiser;
 
 @Component
 public class PublicationRepository {
@@ -25,6 +26,12 @@ public class PublicationRepository {
 	GenericFileGen fileGenerator;
 	@Autowired
 	EmailService emailService;
+	
+	private void saveResource(TPublication publication) throws Exception {
+		db.saveResourse(publication, publication.getPublicationId());
+		RDFSerialiser.saveFuseki(publication);
+	}
+	
 	public TPublication saveXML(String xmlData) throws UnprocessableEntityException {
 		
 		TPublication publication = db.getClassFromXML(new TPublication(), xmlData);
@@ -33,13 +40,14 @@ public class PublicationRepository {
 		}
 		
 		try {
-			db.saveResourse(publication, publication.getPublicationId());
+			saveResource(publication);
 			emailService.send("srbulovicdusan@gmail.com", "Naucni rad", "Nucni rad " + publication.getBasicInformations().getTitle().getValue() + " je dodat u sistem.");
 		} catch (Exception e) {
 			throw new BadRequestException("Unexpected error");
 		}
 		return publication;
 	}
+	
 	public TPublication saveXML(File xmlData) {
 		
 		TPublication publication = db.getClassFromXML(new TPublication(), xmlData);
@@ -48,7 +56,7 @@ public class PublicationRepository {
 		}
 		
 		try {
-			db.saveResourse(publication, publication.getPublicationId());
+			saveResource(publication);
 		} catch (Exception e) {
 			throw new BadRequestException("Unexpected error");
 		}
@@ -81,7 +89,7 @@ public class PublicationRepository {
 			throw new UnprocessableEntityException("status not Valid");                                                                            
 		}                                                       
 		try {                                                              
-			db.saveResourse(publication, publication.getPublicationId());
+			saveResource(publication);
 			return publication;
 		} catch (Exception e) {                                            
 			throw new BadRequestException("Unexpected error");             
@@ -95,7 +103,7 @@ public class PublicationRepository {
 			throw new UnprocessableEntityException("Selected reviewers not valid");   
         }                                                                 
         try {                                                             
-        	db.saveResourse(publication, publication.getPublicationId()); 
+        	saveResource(publication); 
         	return publication;                                           
         } catch (Exception e) {                                           
         	throw new BadRequestException("Unexpected error");            
@@ -122,7 +130,7 @@ public class PublicationRepository {
 			throw new BadRequestException("Bad input...");
 		}
 		try {
-			db.saveResourse(publication, publication.getPublicationId());
+			saveResource(publication);
 		} catch (Exception e) {
 			throw new BadRequestException("Bad input...");
 

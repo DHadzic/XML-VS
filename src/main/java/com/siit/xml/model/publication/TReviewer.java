@@ -13,6 +13,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import com.siit.xml.utils.rdf.RDFID;
+import com.siit.xml.utils.rdf.RDFSerializable;
+
 
 /**
  * <p>Java class for TReviewer complex type.
@@ -37,9 +40,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "TReviewer", propOrder = {
     "reviewerUsername"
 })
+@RDFSerializable(TypeUri = "user")
 public class TReviewer {
 
     @XmlElement(required = true)
+    @RDFID
     protected String reviewerUsername;
 
     /**

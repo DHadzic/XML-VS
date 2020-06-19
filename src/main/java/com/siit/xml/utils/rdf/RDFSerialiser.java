@@ -18,7 +18,7 @@ public class RDFSerialiser {
 	private static final String URLBASE = "http://siit.xml/";
 	private static final String PRED_URL = URLBASE + "predicates/";
 
-	List<Field> getFieldsAnotatedWith(Class<?> clazz, Class<? extends Annotation> annotation) {
+	static private List<Field> getFieldsAnotatedWith(Class<?> clazz, Class<? extends Annotation> annotation) {
 		List<Field> fields = new ArrayList<Field>();
 		for (Field field : clazz.getDeclaredFields()) {
 			if (field.isAnnotationPresent(annotation)) {
@@ -28,19 +28,19 @@ public class RDFSerialiser {
 		return fields;
 	}
 
-	Field getFirstFieldAnotatedWith(Class<?> clazz, Class<? extends Annotation> annotation) {
+	static private Field getFirstFieldAnotatedWith(Class<?> clazz, Class<? extends Annotation> annotation) {
 		List<Field> fields = getFieldsAnotatedWith(clazz, annotation);
 		return fields.size() > 0 ? fields.get(0) : null;
 	}
 
-	String getTypeUri(Class<?> type) {
+	static private String getTypeUri(Class<?> type) {
 		RDFSerializable metaData= type.getAnnotation(RDFSerializable.class);
 		if(metaData.TypeUri().equals("")) {
 			return type.getSimpleName();
 		}
 		return metaData.TypeUri();
 	}
-	public void saveFuseki(Object fusekiObject) throws IllegalArgumentException, IllegalAccessException {
+	public static void saveFuseki(Object fusekiObject) throws IllegalArgumentException, IllegalAccessException {
 		Class<?> clazz = fusekiObject.getClass();
 		if (!clazz.isAnnotationPresent(RDFSerializable.class)) {
 			String error = "The class " + clazz.getSimpleName() + " is not annotated with RDFSerializable";
@@ -62,7 +62,7 @@ public class RDFSerialiser {
 		SparqlUtil.insertData(rdfSerializable.GraphUri(), getUri(fusekiObject), new String(out.toByteArray()));
 	}
 	
-	private Resource insertObjectIntoModel(Model model, Object object) throws IllegalArgumentException, IllegalAccessException {
+	static private Resource insertObjectIntoModel(Model model, Object object) throws IllegalArgumentException, IllegalAccessException {
 		Resource root = getResource(model, object);
 		
 		addLiteralStatements(model, root, object);
@@ -71,7 +71,7 @@ public class RDFSerialiser {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void addPropertyStatments(Model model, Resource root, Object fusekiObject)
+	static private void addPropertyStatments(Model model, Resource root, Object fusekiObject)
 			throws IllegalArgumentException, IllegalAccessException {
 		for (Field field : getFieldsAnotatedWith(fusekiObject.getClass(), RDFProperty.class)) {
 			field.setAccessible(true);
@@ -106,7 +106,7 @@ public class RDFSerialiser {
 		}
 	}
 
-	Property getProperty(Model model, Field field) {
+	static private Property getProperty(Model model, Field field) {
 		RDFProperty anotation = field.getAnnotation(RDFProperty.class);
 		String predicate = "";
 		if (anotation != null) {
@@ -120,20 +120,20 @@ public class RDFSerialiser {
 		return model.createProperty(PRED_URL, predicate);
 	}
 
-	Resource getReferencedResource(Model model, Class<?> referencedClass, String id)
+	static private Resource getReferencedResource(Model model, Class<?> referencedClass, String id)
 			throws IllegalArgumentException, IllegalAccessException {
 
 		return model.createResource(URLBASE + getTypeUri(referencedClass) + "/" + id);
 	}
 
-	Resource getResource(Model model, Object object) throws IllegalArgumentException, IllegalAccessException {
+	static private Resource getResource(Model model, Object object) throws IllegalArgumentException, IllegalAccessException {
 		if (object == null) {
 			return null;
 		}
 		return model.createResource(getUri(object));
 	}
 
-	String getUri(Object object) throws IllegalArgumentException, IllegalAccessException {
+	static private String getUri(Object object) throws IllegalArgumentException, IllegalAccessException {
 		if (object == null) {
 			return null;
 		}
@@ -143,7 +143,7 @@ public class RDFSerialiser {
 		return URLBASE + getTypeUri(clazz) + "/" + uriField.get(object).toString();
 	}
 
-	void addLiteralStatements(Model model, Resource root, Object object)
+	static private void addLiteralStatements(Model model, Resource root, Object object)
 			throws IllegalArgumentException, IllegalAccessException {
 		Class<?> clazz = object.getClass();
 		for (Field field : getFieldsAnotatedWith(clazz, RDFLiteral.class)) {

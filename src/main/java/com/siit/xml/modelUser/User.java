@@ -20,7 +20,6 @@ import com.siit.xml.utils.rdf.RDFLiteral;
 import com.siit.xml.utils.rdf.RDFProperty;
 import com.siit.xml.utils.rdf.RDFSerializable;
 import com.siit.xml.utils.rdf.RDFID;
-import com.siit.xml.utils.rdf.RDFListProperty;
 
 
 /**
@@ -63,11 +62,11 @@ import com.siit.xml.utils.rdf.RDFListProperty;
     "role"
 })
 @XmlRootElement(name = "user")
-@RDFSerializable(uri = "user")
+@RDFSerializable(TypeUri  = "user")
 public class User {
 
     @XmlElement(required = true)
-    @RDFID()
+    @RDFID
     protected String username;
     @XmlElement(required = true)
     protected String password;
@@ -79,9 +78,6 @@ public class User {
     protected String email;
     @XmlElement(required = true)
     protected String role;
-    
-    @RDFListProperty(Predicate = "friend", ValueType = User.class)
-    public List<User> users;
 
     /**
      * Gets the value of the username property.
