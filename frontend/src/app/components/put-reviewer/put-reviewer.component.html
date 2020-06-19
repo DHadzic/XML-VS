@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-4">
+    <select class="form-control" [(ngModel)]="selected_paper">
+      <option *ngFor="let paper of science_papers" [ngValue]="paper" >{{paper}}</option>
+    </select>
+  </div>
+  <div class="col-4">
+      <select class="form-control" [(ngModel)]="selected_reviewer" (change)="dataChange()">
+        <option *ngFor="let reviewer of reviewers" [ngValue]="reviewer" >{{reviewer}}</option>
+      </select>
+  </div>
+  <div class="col-4">
+    <button class="btn btn-success btn-block btn-md" (click)="assignReviewer()">Assign reviewer</button>
+  </div>
+</div>
+

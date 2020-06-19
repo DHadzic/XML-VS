@@ -13,6 +13,7 @@ import { SciencePapersComponent } from './components/science-papers/science-pape
 import { SetReviewersComponent } from './components/set-reviewers/set-reviewers.component';
 import { LoginGuard } from './services/security/login.guard';
 import { AuthGuard } from './services/security/auth.guard';
+import { PutReviewerComponent } from './components/put-reviewer/put-reviewer.component';
 
 const appRoutes: Routes = [
   { path: 'main', 
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
     LoginComponent,
     RegisterComponent,
     SciencePapersComponent,
-    SetReviewersComponent
+    SetReviewersComponent,
+    PutReviewerComponent
   ],
   imports: [
     BrowserModule,
