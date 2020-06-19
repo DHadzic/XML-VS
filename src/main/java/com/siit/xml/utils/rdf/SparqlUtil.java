@@ -1,7 +1,12 @@
 package com.siit.xml.utils.rdf;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.update.UpdateExecutionFactory;
@@ -31,13 +36,16 @@ public class SparqlUtil {
 	private static final String MY_SELECT = 
 			"SELECT DISTINCT ?publication FROM <%1$s%2$s> WHERE\r\n" + 
 			"{ \r\n" + 
-			"    ?publication <http://siit.xml/predicates/info> ?basicInfo .\r\n" + 
-			"    ?publication <http://siit.xml/predicates/status> ?status .\r\n" + 
-			"    ?basicInfo <http://siit.xml/predicates/author> ?author .\r\n" + 
-			"    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .\r\n" + 
-			"  	 ?basicInfo <http://siit.xml/predicates/reviewer> ?reviewer .\r\n" + 
-			"  	 ?author <http://siit.xml/predicates/authorInstitution> ?authorInstitution .\r\n" + 
-			"    FILTER(%3$s)\r\n" + 
+			 "{\n" + 
+			 "    ?publication <http://siit.xml/predicates/info> ?basicInfo .\n" + 
+			 "    ?publication <http://siit.xml/predicates/status> ?status .\n" + 
+			 "    ?basicInfo <http://siit.xml/predicates/author> ?author .\n" + 
+			 "    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .\n" + 
+			 "    ?basicInfo <http://siit.xml/predicates/reviewer> ?reviewer .\n" + 
+			 "    ?author <http://siit.xml/predicates/authorInstitution> ?authorInstitution .\n" + 
+			 "  	FILTER(%3$s)\n" + 
+			 "  }\n" + 
+			 "  FILTER(?author = <http://siit.xml/user/%4$s> || ?status=\"objavljen\")\r\n"+
 			"}";
 
 	
@@ -73,30 +81,15 @@ public class SparqlUtil {
 		processor.execute();
 	}
 	
-	public static void selectData(String graphName, String sparqlCondition) {
-		String sparqlQuery = String.format(MY_SELECT, DATA_URI, graphName, sparqlCondition);
+	public static List<String> selectData(String graphName, String username, String sparqlCondition) {
+		String sparqlQuery = String.format(MY_SELECT, DATA_URI, graphName, sparqlCondition, username);
 		System.out.println(sparqlQuery);
 		QueryExecution query = QueryExecutionFactory.sparqlService(QUERY_URI, sparqlQuery);
 		ResultSet results = query.execSelect();
+		List<String> publicationIDs = new ArrayList<>();
 		while(results.hasNext()) {
-			System.out.println(results.next().get("publication").toString());
+		  publicationIDs.add(results.next().get("publication").toString());
 		}
-
+		return publicationIDs;
 	}
-
 }
-
-//SELECT DISTINCT ?publication FROM <http://localhost:8080/fuseki/PersonDataset/data/MainGraph> WHERE
-//{ 
-//  {
-//    ?publication <http://siit.xml/predicates/BasicInfo> ?basicInfo .
-//    ?publication <http://siit.xml/predicates/Status> ?status .
-//    ?basicInfo <http://siit.xml/predicates/author> ?author .
-//    ?basicInfo <http://siit.xml/predicates/keyword> ?keyword .
-//  	?author <http://siit.xml/predicates/authorInstituion> ?authorInstitution .
-//    FILTER(?author = ?biloSta || ?author = "Pera" )
-//  }
-//  {
-//    
-//  }
-//}

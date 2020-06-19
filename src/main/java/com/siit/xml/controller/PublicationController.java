@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import com.siit.xml.dtos.UpdateDto;
 import com.siit.xml.model.publication.TPublication;
 import com.siit.xml.model.publication.TReviewer;
 import com.siit.xml.service.PublicationService;
+import com.siit.xml.utils.rdf.SparqlUtil;
 
 @RestController
 @RequestMapping("api/publication")
@@ -149,6 +151,7 @@ public class PublicationController {
 		System.out.println(text);
 		return new ResponseEntity<>(pService.searchByText(text), HttpStatus.OK);
 	}
+	
 	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")
 	@RequestMapping(
 			value = "/file",
@@ -169,7 +172,20 @@ public class PublicationController {
 		return new FileSystemResource(f);
 	}
 	
-	
+	@RequestMapping(
+			method = RequestMethod.GET,
+			value="/search/metadata",
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<TPublication>> getPublicationsByMetadata(@RequestBody String query, Principal principal){
+		String username = principal.getName();
+		List<TPublication> rets = new ArrayList<>();
+		for (String publicationID : SparqlUtil.selectData("Publications", query, username)) {
+			rets.add(pService.getById(publicationID));
+		}
+		return new ResponseEntity<>(rets, HttpStatus.OK);
+			
+	}
 	
 	
 	
