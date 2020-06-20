@@ -40,7 +40,7 @@ public class PublicationController {
             method = RequestMethod.POST,
             consumes = MediaType.TEXT_PLAIN_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity saveXML(@RequestBody String xmlData) {
+    public ResponseEntity<TPublication> saveXML(@RequestBody String xmlData) {
 		return new ResponseEntity<TPublication>(pService.saveXML(xmlData),HttpStatus.OK);
     }
 	@PreAuthorize("hasAuthority('ROLE_AUTHOR')")

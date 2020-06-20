@@ -6,4 +6,4 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://foo.bar", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package com.siit.xml.model.publication;
+package com.xml;

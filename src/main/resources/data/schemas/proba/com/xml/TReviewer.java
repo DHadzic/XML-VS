@@ -6,7 +6,7 @@
 //
 
 
-package com.siit.xml.model.publication;
+package com.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

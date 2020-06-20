@@ -1,3 +1,26 @@
-<p>
-  Front page with science papers
-</p>
+<div *ngIf="sciencePapers">
+  <div  *ngFor="let sciencePaper of sciencePapers">
+    <a href="/publications/{{sciencePaper.value.publicationId}}">
+      <p style="display:inline">
+        {{sciencePaper.value.basicInformations.title.value}},
+      </p>
+      <p style="display:inline">
+        authors: 
+      </p>
+      <div style="display:inline" *ngFor="let author of sciencePaper.value.basicInformations.authors; let last = last;">
+        <p *ngIf="!last; else elseBlock"style="display:inline">
+          {{author.username}}, 
+        </p>
+        <ng-template #elseBlock>
+          <p style="display:inline">
+            {{author.username}}
+          </p>
+        </ng-template>
+      </div>
+      <p style="font-weight:italic">
+        {{sciencePaper.value.basicInformations.year}}
+      </p>
+    </a>
+  </div>
+
+</div>

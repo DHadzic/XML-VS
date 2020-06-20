@@ -6,7 +6,7 @@
 //
 
 
-package com.siit.xml.model.publication;
+package com.xml;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -20,21 +20,20 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for TReference complex type.
+ * <p>Java class for TCitation complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="TReference">
+ * &lt;complexType name="TCitation">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="authorName" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
- *         &lt;element name="paperTitle" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="year" type="{http://www.w3.org/2001/XMLSchema}positiveInteger"/>
- *         &lt;element name="url" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="text" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
- *       &lt;attribute name="citationId" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -43,25 +42,22 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TReference", propOrder = {
+@XmlType(name = "TCitation", propOrder = {
     "authorName",
-    "paperTitle",
     "year",
-    "url"
+    "text"
 })
-public class TReference {
+public class TCitation {
 
     @XmlElement(required = true)
     protected List<String> authorName;
     @XmlElement(required = true)
-    protected String paperTitle;
-    @XmlElement(required = true)
     @XmlSchemaType(name = "positiveInteger")
     protected BigInteger year;
     @XmlElement(required = true)
-    protected String url;
-    @XmlAttribute(name = "citationId", required = true)
-    protected BigInteger citationId;
+    protected String text;
+    @XmlAttribute(name = "id", required = true)
+    protected BigInteger id;
 
     /**
      * Gets the value of the authorName property.
@@ -93,30 +89,6 @@ public class TReference {
     }
 
     /**
-     * Gets the value of the paperTitle property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPaperTitle() {
-        return paperTitle;
-    }
-
-    /**
-     * Sets the value of the paperTitle property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPaperTitle(String value) {
-        this.paperTitle = value;
-    }
-
-    /**
      * Gets the value of the year property.
      * 
      * @return
@@ -141,51 +113,51 @@ public class TReference {
     }
 
     /**
-     * Gets the value of the url property.
+     * Gets the value of the text property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getUrl() {
-        return url;
+    public String getText() {
+        return text;
     }
 
     /**
-     * Sets the value of the url property.
+     * Sets the value of the text property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setUrl(String value) {
-        this.url = value;
+    public void setText(String value) {
+        this.text = value;
     }
 
     /**
-     * Gets the value of the citationId property.
+     * Gets the value of the id property.
      * 
      * @return
      *     possible object is
      *     {@link BigInteger }
      *     
      */
-    public BigInteger getCitationId() {
-        return citationId;
+    public BigInteger getId() {
+        return id;
     }
 
     /**
-     * Sets the value of the citationId property.
+     * Sets the value of the id property.
      * 
      * @param value
      *     allowed object is
      *     {@link BigInteger }
      *     
      */
-    public void setCitationId(BigInteger value) {
-        this.citationId = value;
+    public void setId(BigInteger value) {
+        this.id = value;
     }
 
 }

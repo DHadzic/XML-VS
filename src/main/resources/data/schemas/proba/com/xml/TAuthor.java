@@ -6,16 +6,12 @@
 //
 
 
-package com.siit.xml.model.publication;
+package com.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-import com.siit.xml.utils.rdf.RDFID;
-import com.siit.xml.utils.rdf.RDFLiteral;
-import com.siit.xml.utils.rdf.RDFSerializable;
 
 
 /**
@@ -43,12 +39,10 @@ import com.siit.xml.utils.rdf.RDFSerializable;
     "username",
     "authorInstitution"
 })
-@RDFSerializable
 public class TAuthor {
-	@RDFID
+
     @XmlElement(required = true)
     protected String username;
-	@RDFLiteral
     @XmlElement(required = true)
     protected String authorInstitution;
 

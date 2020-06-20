@@ -18,9 +18,9 @@ import { TokenInterService } from './services/security/token-inter.service';
 import { MyRequestComponent } from './components/my-request/my-request.component';
 import { AddAuthorReviewComponent } from './components/add-author-review/add-author-review.component';
 import { ManageReviewsComponent } from './components/manage-reviews/manage-reviews.component';
-
+import { SciencePaperComponent } from './components/science-paper/science-paper.component';
 const appRoutes: Routes = [
-  { path: 'main', 
+  { path: 'publications', 
     component: SciencePapersComponent
   },
   { path: 'login',
@@ -28,8 +28,12 @@ const appRoutes: Routes = [
     canActivate: [LoginGuard] 
   },
   { path: '',
-    redirectTo: 'main',
+    redirectTo: 'publications',
     pathMatch: 'full'
+  },
+  {
+    path: 'publications/:id',
+    component: SciencePaperComponent
   },
   {
     path: 'assignReviewer',
@@ -68,7 +72,8 @@ const appRoutes: Routes = [
     PutReviewerComponent,
     MyRequestComponent,
     AddAuthorReviewComponent,
-    ManageReviewsComponent
+    ManageReviewsComponent,
+    SciencePaperComponent
   ],
   imports: [
     BrowserModule,

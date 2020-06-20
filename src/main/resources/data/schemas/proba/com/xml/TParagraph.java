@@ -6,7 +6,7 @@
 //
 
 
-package com.siit.xml.model.publication;
+package com.xml;
 
 import java.util.ArrayList;
 import java.util.List;

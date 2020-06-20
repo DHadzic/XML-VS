@@ -6,23 +6,17 @@
 //
 
 
-package com.siit.xml.model.publication;
+package com.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import com.siit.xml.utils.rdf.RDFID;
-import com.siit.xml.utils.rdf.RDFLiteral;
-import com.siit.xml.utils.rdf.RDFSerializable;
 
 
 /**
@@ -66,8 +60,6 @@ import com.siit.xml.utils.rdf.RDFSerializable;
     "paragraph",
     "reference"
 })
-@RDFSerializable
-@XmlRootElement(name="SciencePaper")
 public class TPublication {
 
     @XmlElement(required = true)
@@ -78,10 +70,8 @@ public class TPublication {
     protected List<TReference> reference;
     @XmlAttribute(name = "language")
     protected String language;
-    @RDFID
     @XmlAttribute(name = "publicationId", required = true)
     protected String publicationId;
-    @RDFLiteral
     @XmlAttribute(name = "status")
     protected String status;
     @XmlAttribute(name = "created", required = true)

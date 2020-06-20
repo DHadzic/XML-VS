@@ -2,7 +2,7 @@
 <t:SciencePaper xmlns:t="http://foo.bar"
  xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://foo.bar file:/D:/5.godina-Master/xml%20projekat/XML-VS/src/main/resources/data/schemas/Publication.xsd" publicationId="1" created="2006-05-04">
+ xsi:schemaLocation="http://foo.bar file:/D:/5.godina-Master/xml%20projekat/XML-VS/src/main/resources/data/schemas/Publication.xsd" publicationId="publicationId0" created="2006-05-04">
     <t:basicInformations>
         <t:title>title0</t:title>
         <t:authors>
@@ -27,34 +27,38 @@
                 <t:text>text1</t:text>
             </t:citation>
         </t:element>
-        <t:element>
-            <t:citation id="1">
-                <t:authorName>authorName0</t:authorName>
-                <t:authorName>authorName1</t:authorName>
-                <t:year>50</t:year>
-                <t:text>text1</t:text>
-            </t:citation>
-        </t:element>
     </t:paragraph>
     <t:paragraph>
         <t:paragraphTitle>paragraphTitle1</t:paragraphTitle>
         <t:element>
-            <t:text>text2</t:text>
+            <t:citation id="0">
+                <t:authorName>authorName2</t:authorName>
+                <t:authorName>authorName3</t:authorName>
+                <t:year>50</t:year>
+                <t:text>text2</t:text>
+            </t:citation>
         </t:element>
         <t:element>
-            <t:text>text3</t:text>
+            <t:citation id="0">
+                <t:authorName>authorName4</t:authorName>
+                <t:authorName>authorName5</t:authorName>
+                <t:year>50</t:year>
+                <t:text>text3</t:text>
+            </t:citation>
         </t:element>
     </t:paragraph>
     <t:reference citationId="0">
-        <t:authorName>authorName2</t:authorName>
-        <t:authorName>authorName3</t:authorName>
+        <t:authorName>authorName6</t:authorName>
+        <t:authorName>authorName7</t:authorName>
         <t:paperTitle>paperTitle0</t:paperTitle>
         <t:year>50</t:year>
+        <t:url>url0</t:url>
     </t:reference>
-    <t:reference citationId="1">
-        <t:authorName>authorName4</t:authorName>
-        <t:authorName>authorName5</t:authorName>
+    <t:reference citationId="0">
+        <t:authorName>authorName8</t:authorName>
+        <t:authorName>authorName9</t:authorName>
         <t:paperTitle>paperTitle1</t:paperTitle>
         <t:year>50</t:year>
+        <t:url>url1</t:url>
     </t:reference>
 </t:SciencePaper>

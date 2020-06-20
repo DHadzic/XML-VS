@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.itextpdf.text.log.SysoCounter;
 import com.siit.xml.dtos.FileGenDTO;
 import com.siit.xml.dtos.FileType;
 import com.siit.xml.exceptions.BadRequestException;
@@ -111,8 +112,9 @@ public class PublicationRepository {
 	}
 	
 	public List<TPublication> getAll(String username){
+		System.out.println(username);
 		try{
-			return db.getByXPath(new TPublication(), "//SciencePaper[@status='accepted' or ./basicInformations/authors[authorUsename='" + username + "']]");
+			return db.getByXPath(new TPublication(), "//SciencePaper[@status='accepted' or ./basicInformations/authors[username='" + username + "']]");
 		}catch(Exception e){
 			throw new BadRequestException("Something went wrong...");
 		}

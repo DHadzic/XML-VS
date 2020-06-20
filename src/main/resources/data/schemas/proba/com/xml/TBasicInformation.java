@@ -6,21 +6,16 @@
 //
 
 
-package com.siit.xml.model.publication;
+package com.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
-
-import com.siit.xml.utils.rdf.RDFID;
-import com.siit.xml.utils.rdf.RDFProperty;
-import com.siit.xml.utils.rdf.RDFSerializable;
 
 
 /**
@@ -60,16 +55,13 @@ import com.siit.xml.utils.rdf.RDFSerializable;
     "reviewers",
     "keywords"
 })
-@RDFSerializable
 public class TBasicInformation {
-	@RDFID
+
     @XmlElement(required = true)
     protected TBasicInformation.Title title;
-	@RDFProperty(Predicate = "author")
     @XmlElement(required = true)
     protected List<TAuthor> authors;
     protected List<TReviewer> reviewers;
-	@RDFProperty(Predicate = "reviewer")
     protected List<String> keywords;
 
     /**
@@ -152,10 +144,6 @@ public class TBasicInformation {
             reviewers = new ArrayList<TReviewer>();
         }
         return this.reviewers;
-    }
-    
-    public void setReviewers(List<TReviewer> reviewers){
-    	this.reviewers = reviewers;
     }
 
     /**

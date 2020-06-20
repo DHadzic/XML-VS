@@ -1,0 +1,95 @@
+<div *ngIf="sciencePaper">
+  <h1>
+    {{sciencePaper.basicInformations.title.value}}
+  </h1>
+  <p style="display:inline">
+    Authors:
+  </p>
+  <div style="display:inline" *ngFor="let author of sciencePaper.basicInformations.authors; let last = last">
+    <div style="display:inline" *ngIf="!last; else elseBlock">
+      <p style="display:inline">
+        {{ author.username }},
+      </p>
+    </div>
+    <ng-template style="display:inline" #elseBlock>
+      <p style="display:inline">
+        {{ author.username }}
+      </p>
+    </ng-template>
+  </div>
+  <div *ngFor="let paragraph of sciencePaper.paragraph">
+    <h2>
+      {{paragraph.paragraphTitle}}
+    </h2>
+    <div style="display:inline" *ngFor="let element of paragraph.element">
+      <div style="display:inline" *ngIf="element.citation!=null; else elseBlock" style="display:inline">
+        <p style="font-weight:bold;display:inline"> ({{element.citation.id}})</p>
+        <p style="font-style: italic; display:inline">
+         {{element.citation.text}} -
+        </p>
+        <div style="display:inline" *ngFor="let author of element.citation.authorName; let last = last">
+          <div *ngIf="!last; else notLast" style="display:inline">
+            <p style="font-style: italic;display:inline">
+              {{author}},
+            </p>
+          </div>
+          
+          <ng-template #notLast>
+            <p style="font-style: italic;display:inline">
+              {{author}}
+            </p>
+          </ng-template>
+        </div>
+        <p style="font-style: italic;display:inline">
+          {{element.citation.year}}.
+        </p>
+      </div>
+      <ng-template style="display:inline" #elseBlock >
+        <p style="display:inline">
+          {{element.text}}
+        </p>
+      </ng-template>
+     
+    </div>
+  </div>
+  <br>
+  <p>
+    references:
+  </p>
+  <div style="display:inline" *ngFor="let reference of sciencePaper.reference">
+    <a href="{{reference.url}}">
+      <p style="font-weight:bold;display:inline">
+        ({{reference.citationId}}) 
+      </p>
+      <p style="font-weight:bold;display:inline">
+        {{reference.paperTitle}},
+      </p>
+      <div style="display:inline" *ngFor="let author of reference.authorName">
+        <div *ngIf="!last; else notLast" style="display:inline">
+          <p style="font-style: italic;display:inline">
+            {{author}},
+          </p>
+        </div>
+      </div>
+      <ng-template #notLast>
+        <p style="font-style: italic">
+          {{author}}
+        </p>
+      </ng-template>
+      <p style="display:inline">
+        {{reference.year}}.
+      </p>
+      <br/>
+  </a>
+
+  </div>
+  <p style="display:inline">keywords: </p>
+  <div style="display:inline" *ngFor="let keyword of sciencePaper.basicInformations.keywords; let last = last">
+    <div style="display:inline" *ngIf="!last; else notLast">
+      <p style="display:inline">{{keyword}}, </p>
+    </div>
+    <ng-template style="display:inline" #notLast>
+      <p style="display:inline">{{keyword}}</p>
+    </ng-template>
+  </div>
+</div>
